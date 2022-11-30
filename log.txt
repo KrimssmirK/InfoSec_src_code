@@ -1,0 +1,10 @@
+NOV30
+chapter1 to chapter2
+
+task
+- blog design (UI)
+- features design
+- security design
+
+outcome
+- foundation of WEB development from scratch
