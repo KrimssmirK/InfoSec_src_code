@@ -16,6 +16,36 @@
     <title>BLOG</title>
   </head>
   <body>
+  <header>
+	  <div class="collapse bg-dark" id="navbarHeader">
+	    <div class="container">
+	      <div class="row">
+	        <div class="col-sm-8 col-md-7 py-4">
+	          <h4 class="text-white">About Course</h4>
+	          <p class="text-muted">Include course description here...</p>
+	        </div>
+	        <div class="col-sm-4 offset-md-1 py-4">
+	          <h4 class="text-white">Sites</h4>
+	          <ul class="list-unstyled">
+	            <li><a href="https://national-u.edu.ph/" class="text-white">Visit Official Website</a></li>
+                <li><a href="https://www.facebook.com/NationalUniversityPhilippines" class="text-white">Follow on Facebook - National U</a></li>
+	            <li><a href="https://www.facebook.com/groups/ccitofficial/" class="text-white">Follow on Facebook - NUCCIT</a></li>
+	          </ul>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="navbar navbar-dark bg-dark shadow-sm">
+	    <div class="container">
+	      <a href="#" class="navbar-brand d-flex align-items-center">
+	        <strong>NUCCIT Blog Site</strong>
+	      </a>
+	      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="navbar-toggler-icon"></span>
+	      </button>
+	    </div>
+	  </div>
+	</header>
     <div class="container mt-5 w-25">
       <p>Account Registration</p>
           <form action="">
