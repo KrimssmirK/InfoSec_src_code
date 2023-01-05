@@ -4,12 +4,7 @@
     <meta charset="utf-8">
 
     <!-- Bootstrap v5.0 -->
-    <link 
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
-      rel="stylesheet" 
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
-      crossorigin="anonymous"
-    >
+    <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- to support viewport for small devices such as phone, tablets and so on -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,34 +41,55 @@
 	    </div>
 	  </div>
 	</header>
-    <div class="container mt-5 w-25">
+
+  <main>
+    <div class="container mt-5 w-25 py-3 border rounded">
       <p>Account Registration</p>
-          <form action="">
+      <hr>
+      <form action="register.php" method="post">
         <div class="mb-3 mt-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" placeholder="Name" name="name">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="name" placeholder="Name" name="name" required>
         </div>
         <div class="mb-3 mt-3">
           <label for="email" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="email" placeholder="email@example.com" name="email">
+          <input type="email" class="form-control" id="email" placeholder="email@example.com" name="email" required>
         <div class="mb-3">
-            <label for="pwd" class="form-label">Password</label>
-            <input type="password" class="form-control" id="pwd" placeholder="Password" name="pswd">
+          <label for="pwd" class="form-label">Password</label>
+          <input type="password" class="form-control" id="pwd" placeholder="Password" name="pswd" required>
         </div>
         <div class="mb-3">
           <label for="cpwd" class="form-label">Confirm Password</label>
-          <input type="password" class="form-control" id="cpwd" placeholder="Confirm Password" name="cpswd">
+          <input type="password" class="form-control" id="cpwd" placeholder="Confirm Password" name="cpswd" required onkeyup="validate_password()">
         </div>
+        <span id="wrong_pass_alert"></span>
+        <hr>
         <div class="d-flex justify-content-end">
           <a href="./index.php" type="submit" class="btn btn-secondary px-3 me-2">Close</a>
-          <button type="submit" class="btn btn-primary px-3">Save</button>
+          <button type="submit" class="btn btn-primary px-3" id="create">Save</button>
         </div>
-        
       </form>
+    </div>
+  </main>
+  <script>
+    function validate_password() {
+      var pass = document.getElementById('pwd').value;
+      var confirm_pass = document.getElementById('cpwd').value;
+      if (pass != confirm_pass) {
+        document.getElementById('wrong_pass_alert').style.color = 'red';
+        document.getElementById('wrong_pass_alert').innerHTML = '☒ Use same password';
+        document.getElementById('create').disabled = true;
+        document.getElementById('create').style.opacity = (0.4);
+      } else {
+        document.getElementById('wrong_pass_alert').style.color = 'green';
+        document.getElementById('wrong_pass_alert').innerHTML = '🗹 Password Matched';
+        document.getElementById('create').disabled = false;
+        document.getElementById('create').style.opacity = (1);
+      }
+    }
+  </script>
 
     
-
-    </div>
   </body>
 
   <!-- to be able to use the functionalities of Bootstrap -->
@@ -83,3 +99,7 @@
     crossorigin="anonymous">
   </script>
 </html>
+
+<?php
+
+?>
