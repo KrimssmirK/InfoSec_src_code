@@ -105,10 +105,10 @@
 		      </form>
 		    </div>
 		  <div class="row" style="margin-top: 5px;">
-			<form action="" class="form-control" id="frmComments" name="frmComments" enctype="multipart/form-data" autocomplete="off">		
+			<form action="postmessage.php" class="form-control" id="frmComments" name="frmComments" enctype="multipart/form-data" autocomplete="off">		
 			  <h1 class="h3 mb-3 fw-normal">Post Comments</h1>
 			  <div class="mb-3">
-				<textarea id="comment" name="comment" style="width:100%; height: 228px;"></textarea>
+				<textarea id="comment" name="comment" style="width:100%; height: 228px;" required></textarea>
 			  </div>
 			  <button class="btn btn-lg btn-primary" type="submit">Submit Post</button>
 			</form>
@@ -130,18 +130,24 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-               <td>Static Message</td>
-		       <td>October 31, 2022</td>
-              </tr>
-              <tr>
-                <td>Static Message</td>
-                <td>October 31, 2022</td>
-              </tr>
-              <tr>
-	           <td>Static Message</td>
-               <td>October 31, 2022</td>
-              </tr>
+			  <?php
+			    include_once 'config.php';
+				$sql = "SELECT Message, PostDate FROM tblComments";
+				$result = mysqli_query($conn, $sql);
+				if (mysqli_num_rows($result) > 0) {
+					// output data of each row
+					while($row = mysqli_fetch_assoc($result)) {
+					  $orgDate = $row['PostDate'];
+                      $newDate = date("d M Y", strtotime($orgDate));
+					  echo '<tr>
+					          <td>'.$row['Message'].'</td>
+							  <td>'.$newDate.'</td>
+					  		</tr>';
+					}
+				  }
+					
+				  mysqli_close($conn);
+			  ?>
             </tbody>
           </table>
 		</div>
