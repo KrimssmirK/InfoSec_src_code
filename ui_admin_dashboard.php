@@ -69,7 +69,7 @@
                   <div>
                   <?php      
                     include_once 'config.php';
-                    $sql = "SELECT * FROM tblAccounts;";
+                    $sql = "SELECT * FROM $tblaccounts;";
                     $result = mysqli_query($conn, $sql);
                     $rows = mysqli_num_rows($result);
                     

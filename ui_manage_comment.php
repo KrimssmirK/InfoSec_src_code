@@ -74,7 +74,7 @@
           <tbody>
             <?php 
               include_once 'config.php';
-              $sql = "SELECT ID, Message, PostDate FROM tblComments";
+              $sql = "SELECT ID, Message, PostDate FROM $tblcomments";
               $result = mysqli_query($conn, $sql);
               if (mysqli_num_rows($result) > 0) {
                 // output data of each row

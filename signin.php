@@ -5,21 +5,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pswd = $_POST['pass'];
   }
 
-// config of database
-$servername = "localhost";
-$username = "mamp";
-$password = "b(Sp7k6[wv+#EG5";
-$dbname = "InfoSec_Sugino";
+include_once 'config.php';
 
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-  
-// Check connection
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-}
-
-$sql = "SELECT Email, Password FROM tblAccounts WHERE Email = '$email'";
+$sql = "SELECT Email, Password FROM $tblaccounts WHERE Email = '$email'";
 $result = mysqli_query($conn, $sql);
 
 if (mysqli_num_rows($result) > 0) {

@@ -66,7 +66,7 @@
 
           $id = $_POST['id'];
 
-          $sql = "SELECT Name, Email, Password FROM tblAccounts where ID = '$id'";
+          $sql = "SELECT Name, Email, Password FROM $tblaccounts where ID = '$id'";
           $result = mysqli_query($conn, $sql);
           $row = mysqli_fetch_assoc($result);
 

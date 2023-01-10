@@ -7,7 +7,7 @@
 
   include_once 'config.php';
   
-  $sql = "INSERT INTO tblComments (Message, PostDate) VALUES('$comment', '$createdDate')";
+  $sql = "INSERT INTO $tblcomments (Message, PostDate) VALUES('$comment', '$createdDate')";
   
   if (mysqli_query($conn, $sql)) {
     // success

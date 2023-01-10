@@ -3,7 +3,7 @@
   $id = $_POST['id'];
   include_once 'config.php';
   
-  $sql = "DELETE FROM tblComments WHERE ID = $id";
+  $sql = "DELETE FROM $tblcomments WHERE ID = $id";
   
   if (mysqli_query($conn, $sql)) {
     // success

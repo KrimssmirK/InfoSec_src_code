@@ -8,7 +8,7 @@
   $pwd = $_POST['pswd'];
   $newModifiedDate = date('Y-m-j');
 
-  $sql = "UPDATE tblAccounts SET Name = '$name', Email = '$email', Password = '$pwd', ModifiedDate = '$newModifiedDate' WHERE ID = $id";
+  $sql = "UPDATE $tblaccounts SET Name = '$name', Email = '$email', Password = '$pwd', ModifiedDate = '$newModifiedDate' WHERE ID = $id";
 
   if (mysqli_query($conn, $sql)) {
     // success

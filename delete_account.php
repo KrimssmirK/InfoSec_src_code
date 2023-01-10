@@ -3,7 +3,7 @@
   $id = $_POST['id'];
   include_once 'config.php';
   
-  $sql = "DELETE FROM tblAccounts WHERE ID = $id";
+  $sql = "DELETE FROM $tblaccounts WHERE ID = $id";
   
   if (mysqli_query($conn, $sql)) {
     // success

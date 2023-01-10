@@ -75,7 +75,7 @@
           <tbody>
             <?php 
               include_once 'config.php';
-              $sql = "SELECT ID, Name, CreatedDate, ModifiedDate FROM tblAccounts";
+              $sql = "SELECT ID, Name, CreatedDate, ModifiedDate FROM $tblaccounts";
               $result = mysqli_query($conn, $sql);
               if (mysqli_num_rows($result) > 0) {
                 // output data of each row

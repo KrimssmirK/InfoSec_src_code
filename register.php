@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
   include_once 'config.php';
   $date = date('Y-m-j');
-  $sql = "INSERT INTO tblAccounts (Name, Email, Password, CreatedDate, ModifiedDate) VALUES('$name', '$email', '$pswd', '$date', '$date')";
+  $sql = "INSERT INTO $tblaccounts (Name, Email, Password, CreatedDate, ModifiedDate) VALUES('$name', '$email', '$pswd', '$date', '$date')";
   
   if (mysqli_query($conn, $sql)) {
     // success
