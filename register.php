@@ -6,12 +6,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pswd = $_POST['pswd'];
   }
   
-
+  include_once 'config.php';
   $date = date('Y-m-j');
   $sql = "INSERT INTO tblAccounts (Name, Email, Password, CreatedDate, ModifiedDate) VALUES('$name', '$email', '$pswd', '$date', '$date')";
   
   if (mysqli_query($conn, $sql)) {
-    echo "New record created successfully";
+    // success
+    header("Location: http://localhost:8888");
+    die();
   } else {
     echo "Error: " . $sql . "<br>" . mysqli_error($conn);
   }

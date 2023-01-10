@@ -55,12 +55,65 @@
           </ul>
         </div>
       </nav>
+     
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">Dashboard</h1>
         </div>
+       
+          
+            <div class="card mb-4">
+              <div class="card-body bg-warning">
+                <div class="d-flex justify-content-between">
+                  <div>
+                  <?php      
+                    include_once 'config.php';
+                    $sql = "SELECT * FROM tblAccounts;";
+                    $result = mysqli_query($conn, $sql);
+                    $rows = mysqli_num_rows($result);
+                    
+                    echo '<span class="fs-2 fw-bold">'.$rows.'</span>';
+                    
+                    // mysqli_close($conn);
+                  ?>
+                    
+                    <p class="card-text">User Registrations</p>
+                  </div>
+                  <span data-feather="user-plus" class="align-text-bottom w-auto h-auto"></span>
+                </div>
+              </div>
+              <div class="card-footer text-center" style="background-color: #ba8c00">
+                More Info
+                <span data-feather="arrow-right-circle"></span>
+              </div>
+            </div>
+         
+    
+            <div class="card">
+              <div class="card-body bg-danger">
+                <div class="d-flex justify-content-start">
+                  <span data-feather="message-circle" class="w-auto h-auto me-3"></span>
+                  <div>
+                    <p class="card-text text-light">Comments</p>
+                    <?php
+                      // include_once 'config.php';
+                      $sql = "SELECT * FROM tblComments;";
+                      $result = mysqli_query($conn, $sql);
+                      $rows = mysqli_num_rows($result);
+                      
+                      echo '<span class="text-light">'.$rows.'</span>';
+                      
+                      mysqli_close($conn);
+                    ?>
+                  </div>
+                </div>
 
+              </div>
+              </div>
+            </div>
+         
+       
       </main>
     </div>
   </div>
