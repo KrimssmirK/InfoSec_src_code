@@ -72,7 +72,7 @@
                 <figure>
                   <blockquote class="blockquote">
                     <p style="text-align: justify; text-justify: inter-word;">
-                      Information security, often shortened to infosec, is the practice, policies and principles to protect digital data and other kinds of information. infosec responsibilities include establishing a set of business processes that will protect information assets, regardless of how that information is formatted or whether it is in transit, is being processed or is at rest in storage.
+                      I am in your walls information security, often shortened to infosec, is the practice, policies and principles to protect digital data and other kinds of information. infosec responsibilities include establishing a set of business processes that will protect information assets, regardless of how that information is formatted or whether it is in transit, is being processed or is at rest in storage.
                       Generally, an organization applies information security to guard digital information as part of an overall cybersecurity program. infosec's three primary principles, called the CIA triad, are confidentiality, integrity and availability.
                       In short, infosec is how you make sure your employees can get the data they need, while keeping anyone else from accessing it. It can also be associated with risk management and legal regulations.
                     </p>
