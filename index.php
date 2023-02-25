@@ -152,7 +152,9 @@
 								</div>
 								<div class="mb-3">
 									<label for="pass" class="form-label">Password</label>
-									<input type="password" class="form-control" id="pass" name="pass" required>
+									<input type="password" class="form-control" id="pass" name="pass"
+										autocomplete=new-password required>
+									<!-- added not automatically set the password -->
 								</div>
 								<div class="d-grid gap-2">
 									<button class="btn btn-lg btn-primary" type="submit">Sign in</button>
