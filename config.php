@@ -11,21 +11,29 @@
  *  - table names (consistency)
  */
 
+/**--------------------------
+* VM database configuration
+--------------------------*/
+//  $servername = "localhost";
+//  $username = "root";
+//  $password = "";
+//  $dbname = "infosec_sugino";
 
-/*
-These will be changed due to local configuration
-*/
+//  $tbl_accounts = "tblaccounts";
+//  $tbl_comments = "tblcomments";
 
-// database configuration
+/* -----------------------------
+* local database configuration
+-----------------------------*/
 $servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "infosec_sugino";
+$username = "mamp";
+$password = "j)Hi/V)WFe*JVpDM";
+$dbname = "InfoSec_Sugino";
+
+$tbl_accounts = "tblAccounts";
+$tbl_comments = "tblComments";
 
 
-// table names
-$tblaccounts = "tblaccounts";
-$tblcomments = "tblcomments";
 
 // Create connection
 $conn = mysqli_connect($servername, $username, $password, $dbname);
