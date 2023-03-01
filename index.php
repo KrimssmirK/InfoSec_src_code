@@ -193,28 +193,7 @@
 								</tr>
 							</thead>
 							<tbody>
-
-
-								<?php
-								include_once 'config.php';
-								$sql = "SELECT Message, PostDate FROM $tblcomments";
-								$result = mysqli_query($conn, $sql);
-								if (mysqli_num_rows($result) > 0) {
-									// output data of each row
-									while ($row = mysqli_fetch_assoc($result)) {
-										$orgDate = $row['PostDate'];
-										$newDate = date("d M Y", strtotime($orgDate));
-										echo '<tr>
-												<td>' . $row['Message'] . '</td>
-												<td>' . $newDate . '</td>
-												</tr>';
-									}
-								}
-
-								mysqli_close($conn);
-								?>
-
-
+								<?php include_once './controller/print_comments.php'; ?>
 							</tbody>
 						</table>
 					</div>
