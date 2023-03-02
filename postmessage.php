@@ -1,7 +1,18 @@
 <?php
 
-function sanitize_comment($comment)
+function validate_comment($comment)
 {
+
+  /**----------------
+   * INPUT VALIDATION
+   * ----------------
+   * 1. sanitize
+   * 2. input checking
+   * 3. feedback
+   * 4. logging
+   */
+
+
   /**-----------
    * Solution #1
    * -----------
@@ -18,18 +29,22 @@ function sanitize_comment($comment)
    * addcslashes() function
    * returns a string with backslashes in front of the specified characters.
    */
-  return addcslashes($comment, "'");
+
+
+  $sanitized_comment = addcslashes($comment, "'");
+  $checked_comment = htmlentities($sanitized_comment);
+  return $checked_comment;
 }
 
 // get the value input
 $comment = $_GET['comment'];
-$sanitized_comment = sanitize_comment($comment);
+$validated_comment = validate_comment($comment);
 $createdDate = date('Y-m-j');
 
 
 include_once 'config.php';
 
-$sql = "INSERT INTO $tbl_comments (Message, PostDate) VALUES('$sanitized_comment', '$createdDate')";
+$sql = "INSERT INTO $tbl_comments (Message, PostDate) VALUES('$validated_comment', '$createdDate')";
 
 if (mysqli_query($conn, $sql)) {
   // success
