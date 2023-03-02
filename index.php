@@ -35,13 +35,12 @@
 							<h4 class="text-white">About Course</h4>
 							<p class="text-muted">
 							<ul class="text-white">
-								<li>Accountancy, Business & Management</li>
-								<li>Allied Health</li>
-								<li>Architecture</li>
-								<li>Computing & Information Technologies</li>
-								<li>Education Arts & Sciences</li>
-								<li>Engineering</li>
-								<li>Tourism and Hospitality Management</li>
+								<li>Associate in Computer Technology</li>
+								<li>BS Information Technology</li>
+								<li>BS Computer Science</li>
+								<li>Master In Information Technology</li>
+								<li>Master Of Science In Computer Science</li>
+								<li>Doctor Of Philosophy In Computer Science</li>
 							</ul>
 							</p>
 						</div>
@@ -139,7 +138,10 @@
 							</div>
 						</div>
 					</div>
+
+
 					<div class="col-md-4">
+
 						<div class="row">
 							<form action="signin.php" method="post" class="form-control" id="frmLogin"
 								enctype="multipart/form-data" autocomplete="off">
@@ -151,7 +153,7 @@
 									<input type="email" class="form-control" id="email" name="email" required>
 								</div>
 								<div class="mb-3">
-									<label for="pass" class="form-label">Password</label>
+									<label for="password" class="form-label">Password</label>
 									<input type="password" class="form-control" id="pass" name="pass"
 										autocomplete=new-password required>
 									<!-- added not automatically set the password -->
@@ -163,6 +165,8 @@
 								</div>
 							</form>
 						</div>
+
+
 						<div class="row" style="margin-top: 5px;">
 							<form action="postmessage.php" class="form-control" id="frmComments" name="frmComments"
 								enctype="multipart/form-data" autocomplete="off">
