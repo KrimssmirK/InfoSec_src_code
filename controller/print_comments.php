@@ -24,7 +24,7 @@ function print_comment($date, $message)
 include_once 'config.php';
 
 
-$sql = "SELECT Message, PostDate FROM $tbl_comments";
+$sql = "SELECT Message, PostDate FROM $tbl_comments ORDER BY ID DESC";
 $result = mysqli_query($conn, $sql);
 
 // if there is a data in tbl_comments
