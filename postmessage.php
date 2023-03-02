@@ -1,26 +1,25 @@
 <?php
-  if ($_SERVER["REQUEST_METHOD"] == "GET") {
-    // collect value of input field
-    $comment = $_GET['comment'];
-    $createdDate = date('Y-m-j');
-  }
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+  // collect value of input field
+  $comment = $_GET['comment'];
+  $createdDate = date('Y-m-j');
+}
 
-  include_once 'config.php';
-  
-  $sql = "INSERT INTO $tblcomments (Message, PostDate) VALUES('$comment', '$createdDate')";
-  
-  if (mysqli_query($conn, $sql)) {
-    // success
-    header("Location: http://localhost:8888");
-    die();
-  } else {
-    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-  }
-  
-  mysqli_close($conn);
+include_once 'config.php';
+
+$sql = "INSERT INTO $tbl_comments (Message, PostDate) VALUES('$comment', '$createdDate')";
+
+if (mysqli_query($conn, $sql)) {
+  // success
+  header("Location: http://localhost:8888");
+  die();
+} else {
+  echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+}
+
+mysqli_close($conn);
 
 /* reference for date 
-
 d - The day of the month (from 01 to 31)
 D - A textual representation of a day (three letters)
 j - The day of the month without leading zeros (1 to 31)
@@ -59,7 +58,6 @@ c - The ISO-8601 date (e.g. 2013-05-05T16:34:42+00:00)
 r - The RFC 2822 formatted date (e.g. Fri, 12 Apr 2013 12:01:05 +0200)
 U - The seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
 and the following predefined constants can also be used (available since PHP 5.1.0):
-
 DATE_ATOM - Atom (example: 2013-04-12T15:52:01+00:00)
 DATE_COOKIE - HTTP Cookies (example: Friday, 12-Apr-13 15:52:01 UTC)
 DATE_ISO8601 - ISO-8601 (example: 2013-04-12T15:52:01+0000)
@@ -71,8 +69,5 @@ DATE_RFC2822 - RFC 2822 (Fri, 12 Apr 2013 15:52:01 +0000)
 DATE_RFC3339 - Same as DATE_ATOM (since PHP 5.1.3)
 DATE_RSS - RSS (Fri, 12 Aug 2013 15:52:01 +0000)
 DATE_W3C - World Wide Web Consortium (example: 2013-04-12T15:52:01+00:00)
-
 */
 ?>
-
-
