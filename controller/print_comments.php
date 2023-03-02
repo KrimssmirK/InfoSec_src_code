@@ -19,6 +19,18 @@ function print_comment($date, $message)
     </tr>';
 }
 
+function add_breakline($comment)
+{
+    /**
+     * this function add the comment a breakline to 101 index of it
+     * to constraint the length to show in comment section in index.php
+     */
+    if (strlen($comment) > 100) {
+        $comment = substr($comment, 0, 100) . "\n" . substr($comment, 101, strlen($comment));
+    }
+    return $comment;
+}
+
 
 // it is relative path
 include_once 'config.php';
@@ -31,7 +43,8 @@ $result = mysqli_query($conn, $sql);
 if (mysqli_num_rows($result) > 0) {
     // get each row in tbl_comments table
     while ($row = mysqli_fetch_assoc($result)) {
-        print_comment($row['PostDate'], $row['Message']);
+        $retrieved_comment = add_breakline($row['Message']);
+        print_comment($row['PostDate'], $retrieved_comment);
     }
 }
 
