@@ -1,13 +1,35 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  // collect value of input field
-  $comment = $_GET['comment'];
-  $createdDate = date('Y-m-j');
+
+function sanitize_comment($comment)
+{
+  /**-----------
+   * Solution #1
+   * -----------
+   * 1 check each character in comment
+   * 2 if the next character is ' then add \ before it
+   * 3 return the sanitized comment
+   */
+
+  /**-----------
+   * Solution #2
+   * -----------
+   * using php built-in function
+   * 
+   * addcslashes() function
+   * returns a string with backslashes in front of the specified characters.
+   */
+  return addcslashes($comment, "'");
 }
+
+// get the value input
+$comment = $_GET['comment'];
+$sanitized_comment = sanitize_comment($comment);
+$createdDate = date('Y-m-j');
+
 
 include_once 'config.php';
 
-$sql = "INSERT INTO $tbl_comments (Message, PostDate) VALUES('$comment', '$createdDate')";
+$sql = "INSERT INTO $tbl_comments (Message, PostDate) VALUES('$sanitized_comment', '$createdDate')";
 
 if (mysqli_query($conn, $sql)) {
   // success
