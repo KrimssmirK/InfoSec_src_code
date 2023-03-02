@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   include_once 'config.php';
 
   $created_date = date('Y-m-j');
-  $sql = "INSERT INTO $tblaccounts (Name, Email, Password, CreatedDate, ModifiedDate) VALUES('$name', '$email', '$password', '$created_date', '$created_date')";
+  $sql = "INSERT INTO $tbl_accounts (Name, Email, Password, CreatedDate, ModifiedDate) VALUES('$name', '$email', '$password', '$created_date', '$created_date')";
 
 
   // open and connect to the database and make a query
