@@ -1,3 +1,4 @@
+<?php require 'custom_functions.php'; ?>
 <!doctype html>
 <html lang="en">
 
@@ -70,16 +71,7 @@
           <div class="card-body bg-warning">
             <div class="d-flex justify-content-between">
               <div>
-                <?php
-                include_once 'config.php';
-                $sql = "SELECT * FROM $tbl_accounts;";
-                $result = mysqli_query($conn, $sql);
-                $rows = mysqli_num_rows($result);
-
-                echo '<span class="fs-2 fw-bold">' . $rows . '</span>';
-
-                // mysqli_close($conn);
-                ?>
+                <?php print_number("accounts"); ?>
 
                 <p class="card-text">User Registrations</p>
               </div>
@@ -99,16 +91,7 @@
               <span data-feather="message-circle" class="w-auto h-auto me-3"></span>
               <div>
                 <p class="card-text text-light">Comments</p>
-                <?php
-                // include_once 'config.php';
-                $sql = "SELECT * FROM tblComments;";
-                $result = mysqli_query($conn, $sql);
-                $rows = mysqli_num_rows($result);
-
-                echo '<span class="text-light">' . $rows . '</span>';
-
-                mysqli_close($conn);
-                ?>
+                <?php print_number("comments"); ?>
               </div>
             </div>
 

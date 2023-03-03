@@ -162,7 +162,7 @@ function insert_comment($comment, $date)
      * can prevent SQL INJECTION
      */
 
-    include_once 'config.php';
+    require 'config.php';
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         // set the PDO error mode to exception
@@ -233,7 +233,7 @@ function retrieve_comments()
      * to PREVENT SQL INJECTION!!
      */
 
-    include 'config.php';
+    require 'config.php';
     try {
         // connect
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -264,7 +264,7 @@ function insert_account($name, $email, $password)
      * can prevent SQL INJECTION
      */
 
-    include_once 'config.php';
+    require 'config.php';
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         // set the PDO error mode to exception
@@ -324,7 +324,7 @@ function insert_account($name, $email, $password)
 
 function login($email, $password)
 {
-    include_once 'config.php';
+    require 'config.php';
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         // set the PDO error mode to exception
@@ -352,5 +352,43 @@ function login($email, $password)
     }
 
     $conn = null;
+}
+
+function print_number($table)
+{
+    require 'config.php';
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // prepare
+        $stmt;
+        if ($table == "accounts") {
+            $stmt = $conn->prepare("SELECT * FROM $tbl_accounts");
+        }
+
+        if ($table == "comments") {
+            $stmt = $conn->prepare("SELECT * FROM $tbl_comments");
+
+        }
+
+        $stmt->execute();
+
+        // while ($row = $stmt->fetch()) {
+        //     if ($row[1] == $password) {
+        //         success("login");
+        //         enter_page("admin");
+        //     }
+        // }
+        $result = $stmt->fetchAll();
+        echo '<span class="fs-2 fw-bold">' . sizeof($result) . '</span>';
+
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+    $conn = null;
+
 }
 ?>
