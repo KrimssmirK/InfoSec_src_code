@@ -252,4 +252,69 @@ function retrieve_comments()
     }
     $conn = null;
 }
+
+function insert_account($name, $email, $password)
+{
+    /**
+     * using this PDO statement
+     * can prevent SQL INJECTION
+     */
+
+    include_once 'config.php';
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+        $stmt_check_account = $conn->prepare("SELECT Email FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
+
+        $stmt_check_account->bindParam(':EXIST_EMAIL', $EXIST_EMAIL);
+        $EXIST_EMAIL = $email;
+
+        $stmt_check_account->execute();
+
+        // fetch rows one by one
+        if ($row = $stmt_check_account->fetch()) {
+            if ($row[0] == $email) {
+                echo "<script>alert('email is already exist!');</script>";
+                echo "<script>window.location.href='ui_register.php';</script>";
+                exit();
+            }
+
+        }
+
+        // prepare
+        $stmt = $conn->prepare("INSERT INTO $tbl_accounts (Name, Email, Password, CreatedDate, ModifiedDate)
+        VALUES (:Name, :Email, :Password, :CreatedDate, :ModifiedDate)");
+
+        // bind
+        $stmt->bindParam(':Name', $Name);
+        $stmt->bindParam(':Email', $Email);
+        $stmt->bindParam(':Password', $Password);
+        $stmt->bindParam(':CreatedDate', $CreatedDate);
+        $stmt->bindParam(':ModifiedDate', $ModifiedDate);
+
+
+        // insert a row
+        $Name = $name;
+        $Email = $email;
+        $Password = $password;
+
+        // the date when the account is created
+        $created_date = date('Y-m-j');
+
+        $CreatedDate = $created_date;
+        $ModifiedDate = $created_date;
+        $stmt->execute();
+
+        success("register");
+        back("home");
+
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+    $conn = null;
+}
 ?>

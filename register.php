@@ -26,12 +26,9 @@ $validated_email = validate($email, "email");
 $validated_password = validate($password, "password");
 
 
-
+// insert the new account to database
+insert_account($validated_name, $validated_email, $validated_password);
 
 
 
 ?>
-
-$created_date = date('Y-m-j');
-$sql = "INSERT INTO $tbl_accounts (Name, Email, Password, CreatedDate, ModifiedDate) VALUES('$name', '$email',
-'$password', '$created_date', '$created_date')";
