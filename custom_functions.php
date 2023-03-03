@@ -13,6 +13,11 @@ function enter_page($page)
         echo "<script>window.location.href='ui_admin_dashboard.php';</script>";
     }
 
+    if ($page == "admin_comment") {
+        echo "<script>window.location.href='ui_manage_comment.php';</script>";
+
+    }
+
 }
 
 function success($str)
@@ -430,6 +435,35 @@ function print_number($table)
         // }
         $result = $stmt->fetchAll();
         echo '<span class="fs-2 fw-bold">' . sizeof($result) . '</span>';
+
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+    $conn = null;
+
+}
+
+function delete_comment($id)
+{
+    require 'config.php';
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // prepare
+        $stmt = $conn->prepare("DELETE FROM $tbl_comments WHERE ID = :EXIST_ID");
+
+        // bind
+        $stmt->bindParam(":EXIST_ID", $EXIST_ID);
+
+        //execute
+        $EXIST_ID = $id;
+        $stmt->execute();
+
+        success("delete a comment");
+        enter_page("admin_comment");
 
     } catch (PDOException $e) {
         echo $e->getMessage();
