@@ -70,11 +70,33 @@ function validate($target_input, $type)
         case "email":
             return validate_email($target_input);
 
+        case "password":
+            return validate_password($target_input);
+
         default:
             echo "error or nothing is implemented";
     }
 
 
+}
+
+function validate_password($password)
+{
+    // check if it is not empty
+    if (strlen($password) == 0) {
+        echo "<script>alert('password must be filled');</script>";
+        back("register");
+        exit();
+    }
+
+    // check it has length of more than 8
+    if (strlen($password) < 8) {
+        echo "<script>alert('password must be at least 8 characters');</script>";
+        back("register");
+        exit();
+    }
+
+    return $password;
 }
 
 function validate_email($email)

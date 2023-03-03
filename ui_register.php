@@ -69,7 +69,7 @@
 
         <div class="mb-3">
           <label for="pwd" class="form-label">Password</label>
-          <input type="password" class="form-control" id="pwd" placeholder="Password" name="password" minlength="1"
+          <input type="password" class="form-control" id="pwd" placeholder="Password" name="password" minlength="8"
             required>
         </div>
 
@@ -77,7 +77,7 @@
         <div class="mb-3">
           <label for="cpwd" class="form-label">Confirm Password</label>
           <input type="password" class="form-control" id="cpwd" placeholder="Confirm Password" name="confirm_password"
-            minlength="1" required onkeyup="validate_password()">
+            minlength="8" required onkeyup="validate_password()">
         </div>
 
 
