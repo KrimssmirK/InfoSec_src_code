@@ -4,6 +4,13 @@ function back()
     echo "<script>window.location.href='index.php';</script>";
 }
 
+function success($str)
+{
+    echo "<script>alert('success to " . $str . "');</script>";
+}
+
+
+
 function validate($target_input)
 {
 
@@ -57,20 +64,105 @@ function validate($target_input)
     return filter_var($target_input, FILTER_SANITIZE_SPECIAL_CHARS);
 }
 
-function insert_data_to_database($conn, $sql)
+function insert_comment($comment, $date)
 {
     /**
-     * need to apply SQL INJECTION PREVENTION
+     * using this PDO statement
+     * can prevent SQL INJECTION
      */
 
-    if (mysqli_query($conn, $sql)) {
-        // success
-        echo "<script>alert('success');</script>";
+    include_once 'config.php';
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // prepare
+        $stmt = $conn->prepare("INSERT INTO $tbl_comments (Message, PostDate)
+        VALUES (:Message, :PostDate)");
+
+        // bind
+        $stmt->bindParam(':Message', $Message);
+        $stmt->bindParam(':PostDate', $PostDate);
+
+
+        // insert a row
+        $Message = $comment;
+        $PostDate = $date;
+        $stmt->execute();
+
+        success("comment");
         back();
-    } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+
+    } catch (PDOException $e) {
+        echo $sql . "<br>" . $e->getMessage();
     }
 
-    mysqli_close($conn);
+    $conn = null;
+}
+
+function print_comment($message, $date)
+{
+    /**
+     * 1. change the date format 
+     * 2. view the comments in home page with formatted date
+     */
+
+
+    // 1.
+    $date_diff_format = date("d M Y", strtotime($date));
+
+
+    // 2.
+    echo '<tr>
+    <td>' . $message . '</td>
+    <td>' . $date_diff_format . '</td>
+    </tr>';
+}
+
+function add_breakline($comment)
+{
+    /**
+     * this function add the comment a breakline to 101 index of it
+     * to constraint the length to show in comment section in index.php
+     */
+    if (strlen($comment) > 100) {
+        $comment = substr($comment, 0, 100) . "\n" . substr($comment, 101, strlen($comment));
+    }
+    return $comment;
+}
+
+function retrieve_comments()
+{
+
+    /**----------------------
+     * PDO (PHP Data Objects)
+     * ----------------------
+     * using PDO for MySQL
+     * to PREVENT SQL INJECTION!!
+     */
+
+    include 'config.php';
+    try {
+        // connect
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // prepare
+        $stmt = $conn->prepare("SELECT Message, PostDate FROM $tbl_comments ORDER BY ID DESC");
+
+        // execute
+        $stmt->execute();
+
+        // fetch rows one by one
+        while ($row = $stmt->fetch()) {
+            print_comment($row[0], $row[1]);
+        }
+
+
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+    $conn = null;
 }
 ?>
