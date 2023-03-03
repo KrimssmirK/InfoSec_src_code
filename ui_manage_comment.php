@@ -1,3 +1,4 @@
+<?php require "custom_functions.php" ?>
 <!doctype html>
 <html lang="en">
 
@@ -75,55 +76,7 @@
             </tr>
           </thead>
           <tbody>
-            <?php
-            include_once 'config.php';
-            $sql = "SELECT ID, Message, PostDate FROM $tbl_comments";
-            $result = mysqli_query($conn, $sql);
-            if (mysqli_num_rows($result) > 0) {
-              // output data of each row
-              while ($row = mysqli_fetch_assoc($result)) {
-                $orgPostedDate = $row['PostDate'];
-                $newPostedDate = date("d M Y", strtotime($orgPostedDate));
-                echo '<tr>
-                          <td>' . $row['ID'] . '</td>
-                          <td>' . $row['Message'] . '</td>
-                          <td>' . $newPostedDate . '</td>
-                          <td>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal-' . $row['ID'] . '">Delete</button>
-                          </td>
-                        </tr>
-                        <div class="modal" id="myModal-' . $row['ID'] . '">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-
-                        
-                              <div class="modal-header">
-                                <h4 class="modal-title">Confirmation</h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                              </div>
-
-                       
-                              <div class="modal-body">
-                                Sure you would like to delete?
-                              </div>
-
-                         
-                              <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <form action="delete_message.php" method="post">
-                                  <input type="hidden" name="id" value="' . $row['ID'] . '"/>
-                                  <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
-                                </form>
-                              </div>
-
-                            </div>
-                          </div>
-                        </div>';
-              }
-            }
-
-
-            ?>
+            <?php retrieve_comments($is_admin = true); ?>
           </tbody>
         </table>
 
@@ -140,6 +93,3 @@
 </body>
 
 </html>
-<?php
-mysqli_close($conn);
-?>

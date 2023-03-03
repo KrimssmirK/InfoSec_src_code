@@ -192,23 +192,70 @@ function insert_comment($comment, $date)
     $conn = null;
 }
 
-function print_comment($message, $date)
+function print_comment_with_control($id, $comment, $created_date)
 {
-    /**
-     * 1. change the date format 
-     * 2. view the comments in home page with formatted date
-     */
-
-
-    // 1.
-    $date_diff_format = date("d M Y", strtotime($date));
-
-
-    // 2.
+    $created_date_diff_format = date("d M Y", strtotime($created_date));
     echo '<tr>
-    <td>' . $message . '</td>
-    <td>' . $date_diff_format . '</td>
-    </tr>';
+                          <td>' . $id . '</td>
+                          <td>' . $comment . '</td>
+                          <td>' . $created_date_diff_format . '</td>
+                          <td>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal-' . $id . '">Delete</button>
+                          </td>
+                        </tr>
+                        <div class="modal" id="myModal-' . $id . '">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+
+                        
+                              <div class="modal-header">
+                                <h4 class="modal-title">Confirmation</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                              </div>
+
+                       
+                              <div class="modal-body">
+                                Sure you would like to delete?
+                              </div>
+
+                         
+                              <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <form action="delete_message.php" method="post">
+                                  <input type="hidden" name="id" value="' . $id . '"/>
+                                  <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                                </form>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>';
+
+}
+
+function print_comment($id, $comment, $date, $is_admin)
+{
+    if ($is_admin) {
+        // do something in admin side
+        print_comment_with_control($id, $comment, $date);
+    } else {
+        /**
+         * 1. change the date format 
+         * 2. view the comments in home page with formatted date
+         */
+
+
+        // 1.
+        $date_diff_format = date("d M Y", strtotime($date));
+
+
+        // 2.
+        echo '<tr>
+                <td>' . $comment . '</td>
+                <td>' . $date_diff_format . '</td>
+                </tr>';
+    }
+
 }
 
 function add_breakline($comment)
@@ -223,7 +270,7 @@ function add_breakline($comment)
     return $comment;
 }
 
-function retrieve_comments()
+function retrieve_comments($is_admin = false)
 {
 
     /**----------------------
@@ -240,14 +287,14 @@ function retrieve_comments()
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // prepare
-        $stmt = $conn->prepare("SELECT Message, PostDate FROM $tbl_comments ORDER BY ID DESC");
+        $stmt = $conn->prepare("SELECT ID, Message, PostDate FROM $tbl_comments ORDER BY ID DESC");
 
         // execute
         $stmt->execute();
 
         // fetch rows one by one
         while ($row = $stmt->fetch()) {
-            print_comment(add_breakline($row[0]), $row[1]);
+            print_comment($row[0], add_breakline($row[1]), $row[2], $is_admin);
         }
 
 
