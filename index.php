@@ -1,3 +1,4 @@
+<?php include_once 'custom_functions.php'; ?>
 <!DOCTYPE html> <!-- HTML5 -->
 <html lang="en">
 
@@ -197,7 +198,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php include_once './controller/print_comments.php'; ?>
+								<?php retrieve_comments(); ?>
 							</tbody>
 						</table>
 					</div>
