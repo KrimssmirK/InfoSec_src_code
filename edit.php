@@ -65,32 +65,46 @@
           <h1 class="h2">Edit User Accounts</h1>
         </div>
         <?php
-        include_once 'config.php';
 
+        // include_once 'config.php';
+        
+        // $id = $_POST['id'];
+        
+        // $sql = "SELECT Name, Email, Password FROM $tbl_accounts where ID = '$id'";
+        // $result = mysqli_query($conn, $sql);
+        // $row = mysqli_fetch_assoc($result);
+        
+        // $name = $row['Name'];
+        // $email = $row['Email'];
+        // $password = $row['Password'];
+        
+        // mysqli_close($conn);
+        require "custom_functions.php";
+
+        // get the inputs's data
         $id = $_POST['id'];
 
-        $sql = "SELECT Name, Email, Password FROM $tbl_accounts where ID = '$id'";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
+        // get the data from database
+        $data = retrieve_account($id);
+        $name = $data[0];
+        $email = $data[1];
+        $password = $data[2];
 
-        $name = $row['Name'];
-        $email = $row['Email'];
-        $password = $row['Password'];
-
-        mysqli_close($conn);
         ?>
         <form action="save.php" method="post">
           <div class="mb-3 mt-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" value="<?php echo $name; ?>" name="name" required>
+            <input type="text" class="form-control" id="name" value="<?php echo validate($name, "name"); ?>" name="name"
+              pattern="[a-zA-Z ]+" required>
           </div>
           <div class="mb-3 mt-3">
             <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="email" value="<?php echo $email; ?>" name="email" required>
+            <input type="email" class="form-control" id="email" value="<?php echo validate($email, "email"); ?>"
+              name="email" disabled>
             <div class="mb-3">
               <label for="pwd" class="form-label">Password</label>
-              <input type="password" class="form-control" id="pwd" value="<?php echo $password; ?>" name="pswd"
-                required>
+              <input type="password" class="form-control" id="pwd"
+                value="<?php echo validate($password, "password"); ?>" name="password" minlength="8" required>
             </div>
             <input type="hidden" name="id" value="<?php echo $id; ?>" />
             <hr>

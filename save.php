@@ -1,22 +1,15 @@
 <?php
-// this is the configuration about the database
-include_once 'config.php';
+require "custom_functions.php";
 
+// get the inputs' data
 $id = $_POST['id'];
 $name = $_POST['name'];
-$email = $_POST['email'];
-$pwd = $_POST['pswd'];
-$newModifiedDate = date('Y-m-j');
+$password = $_POST['password'];
 
-$sql = "UPDATE $tblaccounts SET Name = '$name', Email = '$email', Password = '$pwd', ModifiedDate = '$newModifiedDate' WHERE ID = $id";
+// validate
+$validated_name = validate($name, "name");
+$validated_password = validate($password, "password");
 
-if (mysqli_query($conn, $sql)) {
-  // success
-  header("Location: http://localhost:8888/ui_manage_account.php");
-  die();
-} else {
-  echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-}
-
-mysqli_close($conn);
+// update an account in database
+update_account($id, $validated_name, $validated_password);
 ?>

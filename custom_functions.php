@@ -25,6 +25,8 @@ function enter_page($page)
 
 
 
+
+
 }
 
 function success($str)
@@ -364,6 +366,47 @@ function print_account_with_control($id, $name, $created_date, $modified_date)
 
 }
 
+function retrieve_account($id)
+{
+
+    /**----------------------
+     * PDO (PHP Data Objects)
+     * ----------------------
+     * using PDO for MySQL
+     * to PREVENT SQL INJECTION!!
+     */
+
+    require 'config.php';
+    try {
+        // connect
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // prepare
+        $stmt = $conn->prepare("SELECT Name, Email, Password FROM $tbl_accounts WHERE ID = :EXIST_ID");
+
+        // bind
+        $stmt->bindParam(":EXIST_ID", $EXIST_ID);
+
+        // execute
+        $EXIST_ID = $id;
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $name = $result['Name'];
+        $email = $result['Email'];
+        $password = $result['Password'];
+
+
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+    $conn = null;
+
+    return array($name, $email, $password);
+}
+
 function retrieve_accounts()
 {
 
@@ -463,6 +506,47 @@ function insert_account($name, $email, $password)
 
     $conn = null;
 }
+
+function update_account($id, $name, $password)
+{
+    /**
+     * using this PDO statement
+     * can prevent SQL INJECTION
+     */
+
+    require 'config.php';
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // prepare
+        $stmt = $conn->prepare("UPDATE $tbl_accounts SET Name = :Name, Password = :Password, ModifiedDate = :ModifiedDate WHERE ID = :EXIST_ID");
+
+        // bind
+        $stmt->bindParam(':Name', $Name);
+        $stmt->bindParam(':Password', $Password);
+        $stmt->bindParam(':ModifiedDate', $ModifiedDate);
+        $stmt->bindParam(':EXIST_ID', $EXIST_ID);
+
+        // execute
+        $Name = $name;
+        $Password = $password;
+        $ModifiedDate = date('Y-m-j');
+        $EXIST_ID = $id;
+        $stmt->execute();
+
+
+        success("update an account");
+        enter_page("admin_account");
+
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+    $conn = null;
+}
+
 
 function login($email, $password)
 {
