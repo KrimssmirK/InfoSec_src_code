@@ -156,7 +156,7 @@ function retrieve_comments()
 
         // fetch rows one by one
         while ($row = $stmt->fetch()) {
-            print_comment($row[0], $row[1]);
+            print_comment(add_breakline($row[0]), $row[1]);
         }
 
 
