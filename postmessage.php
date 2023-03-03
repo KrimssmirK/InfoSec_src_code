@@ -4,11 +4,11 @@
 include_once 'custom_functions.php';
 
 
-// get the value input
+// get the inputs' data
 $comment = $_GET['comment'];
 
 // prepare the data
-$validated_comment = validate($comment);
+$validated_comment = validate($comment, "comment");
 $created_date = date('Y-m-j');
 
 
