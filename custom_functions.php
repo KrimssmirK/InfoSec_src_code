@@ -309,6 +309,89 @@ function retrieve_comments($is_admin = false)
     $conn = null;
 }
 
+function print_account_with_control($id, $name, $created_date, $modified_date)
+{
+    $created_date_diff_format = date("d M Y", strtotime($created_date));
+    $modified_date_diff_format = date("d M Y", strtotime($modified_date));
+
+    echo '<tr>
+    <td>' . $id . '</td>
+    <td>' . $name . '</td>
+    <td>' . $created_date_diff_format . '</td>
+    <td>' . $modified_date_diff_format . '</td>
+    <td>
+      <form method="POST" action="edit.php">
+        <input type="hidden" name="id" value="' . $id . '" />
+        <button type="submit" class="btn btn-primary">Edit</button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal-' . $id . '">Delete</button>
+      </form>
+    </td>
+  </tr>
+  <div class="modal" id="myModal-' . $id . '">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+  
+        <div class="modal-header">
+          <h4 class="modal-title">Confirmation</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+ 
+        <div class="modal-body">
+          Sure you would like to delete?
+        </div>
+
+   
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <form action="delete_account.php" method="post">
+            <input type="hidden" name="id" value="' . $id . '"/>
+            <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>';
+
+}
+
+function retrieve_accounts()
+{
+
+    /**----------------------
+     * PDO (PHP Data Objects)
+     * ----------------------
+     * using PDO for MySQL
+     * to PREVENT SQL INJECTION!!
+     */
+
+    require 'config.php';
+    try {
+        // connect
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // prepare
+        $stmt = $conn->prepare("SELECT ID, Name, CreatedDate, ModifiedDate FROM $tbl_accounts");
+
+        // execute
+        $stmt->execute();
+
+        // fetch rows one by one
+        while ($row = $stmt->fetch()) {
+            print_account_with_control($row[0], $row[1], $row[2], $row[3]);
+        }
+
+
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+    $conn = null;
+}
+
+
 function insert_account($name, $email, $password)
 {
     /**

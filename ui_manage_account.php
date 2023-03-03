@@ -1,3 +1,4 @@
+<?php require "custom_functions.php" ?>
 <!doctype html>
 <html lang="en">
 
@@ -77,60 +78,60 @@
           </thead>
           <tbody>
             <?php
-            include_once 'config.php';
-            $sql = "SELECT ID, Name, CreatedDate, ModifiedDate FROM $tbl_accounts";
-            $result = mysqli_query($conn, $sql);
-            if (mysqli_num_rows($result) > 0) {
-              // output data of each row
-              while ($row = mysqli_fetch_assoc($result)) {
-                $orgCreatedDate = $row['CreatedDate'];
-                $newCreatedDate = date("d M Y", strtotime($orgCreatedDate));
-                $orgModifiedDate = $row['ModifiedDate'];
-                $newModifiedDate = date("d M Y", strtotime($orgModifiedDate));
-                echo '<tr>
-                          <td>' . $row['ID'] . '</td>
-                          <td>' . $row['Name'] . '</td>
-                          <td>' . $newCreatedDate . '</td>
-                          <td>' . $newModifiedDate . '</td>
-                          <td>
-                            <form method="POST" action="edit.php">
-                              <input type="hidden" name="id" value="' . $row['ID'] . '" />
-                              <button type="submit" class="btn btn-primary">Edit</button>
-                              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal-' . $row['ID'] . '">Delete</button>
-                            </form>
-                          </td>
-                        </tr>
-                        <div class="modal" id="myModal-' . $row['ID'] . '">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
+            // include_once 'config.php';
+            // $sql = "SELECT ID, Name, CreatedDate, ModifiedDate FROM $tbl_accounts";
+            // $result = mysqli_query($conn, $sql);
+            // if (mysqli_num_rows($result) > 0) {
+            //   // output data of each row
+            //   while ($row = mysqli_fetch_assoc($result)) {
+            //     $orgCreatedDate = $row['CreatedDate'];
+            //     $newCreatedDate = date("d M Y", strtotime($orgCreatedDate));
+            //     $orgModifiedDate = $row['ModifiedDate'];
+            //     $newModifiedDate = date("d M Y", strtotime($orgModifiedDate));
+            //     echo '<tr>
+            //               <td>' . $row['ID'] . '</td>
+            //               <td>' . $row['Name'] . '</td>
+            //               <td>' . $newCreatedDate . '</td>
+            //               <td>' . $newModifiedDate . '</td>
+            //               <td>
+            //                 <form method="POST" action="edit.php">
+            //                   <input type="hidden" name="id" value="' . $row['ID'] . '" />
+            //                   <button type="submit" class="btn btn-primary">Edit</button>
+            //                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal-' . $row['ID'] . '">Delete</button>
+            //                 </form>
+            //               </td>
+            //             </tr>
+            //             <div class="modal" id="myModal-' . $row['ID'] . '">
+            //               <div class="modal-dialog">
+            //                 <div class="modal-content">
+            
 
-                        
-                              <div class="modal-header">
-                                <h4 class="modal-title">Confirmation</h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                              </div>
+            //                   <div class="modal-header">
+            //                     <h4 class="modal-title">Confirmation</h4>
+            //                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            //                   </div>
+            
 
-                       
-                              <div class="modal-body">
-                                Sure you would like to delete?
-                              </div>
+            //                   <div class="modal-body">
+            //                     Sure you would like to delete?
+            //                   </div>
+            
 
-                         
-                              <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <form action="delete_account.php" method="post">
-                                  <input type="hidden" name="id" value="' . $row['ID'] . '"/>
-                                  <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
-                                </form>
-                              </div>
-
-                            </div>
-                          </div>
-                        </div>';
-              }
-            }
-
-
+            //                   <div class="modal-footer">
+            //                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            //                     <form action="delete_account.php" method="post">
+            //                       <input type="hidden" name="id" value="' . $row['ID'] . '"/>
+            //                       <button type="submit" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+            //                     </form>
+            //                   </div>
+            
+            //                 </div>
+            //               </div>
+            //             </div>';
+            //   }
+            // }
+            
+            retrieve_accounts();
             ?>
           </tbody>
         </table>
@@ -148,7 +149,3 @@
 </body>
 
 </html>
-
-<?php
-mysqli_close($conn);
-?>
