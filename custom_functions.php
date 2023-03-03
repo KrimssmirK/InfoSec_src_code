@@ -1,7 +1,14 @@
 <?php
-function back()
+function back($page)
 {
-    echo "<script>window.location.href='index.php';</script>";
+    if ($page == "home") {
+        echo "<script>window.location.href='index.php';</script>";
+    }
+
+    if ($page == "register") {
+        echo "<script>window.location.href='ui_register.php';</script>";
+    }
+
 }
 
 function success($str)
@@ -11,7 +18,7 @@ function success($str)
 
 
 
-function validate($target_input)
+function validate($target_input, $type)
 {
 
     /**----------------
@@ -53,15 +60,18 @@ function validate($target_input)
     // $checked_comment = htmlentities($sanitized_comment);
     // return $checked_comment;
 
-
-    if (strlen($target_input) == 0) {
-        echo "<script>alert('comment must be filled');</script>";
-        back();
-        exit();
+    if ($type == "comment") {
+        if (strlen($target_input) == 0) {
+            echo "<script>alert('comment must be filled');</script>";
+            back("home");
+            exit();
+        }
+        return filter_var($target_input, FILTER_SANITIZE_SPECIAL_CHARS);
     }
 
 
-    return filter_var($target_input, FILTER_SANITIZE_SPECIAL_CHARS);
+
+
 }
 
 function insert_comment($comment, $date)
@@ -92,7 +102,7 @@ function insert_comment($comment, $date)
         $stmt->execute();
 
         success("comment");
-        back();
+        back("home");
 
     } catch (PDOException $e) {
         echo $sql . "<br>" . $e->getMessage();
