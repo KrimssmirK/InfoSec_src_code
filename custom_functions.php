@@ -67,11 +67,34 @@ function validate($target_input, $type)
         case "name":
             return validate_name($target_input);
 
+        case "email":
+            return validate_email($target_input);
+
         default:
             echo "error or nothing is implemented";
     }
 
 
+}
+
+function validate_email($email)
+{
+    // check if it is not empty
+    if (strlen($email) == 0) {
+        echo "<script>alert('email must be filled');</script>";
+        back("register");
+        exit();
+    }
+
+    // regex in php to match the pattern in HTML5
+    $pattern = "/[^ -<>]@/";
+    if (!preg_match($pattern, $email)) {
+        echo "<script>alert('match the required pattern in email');</script>";
+        back("register");
+        exit();
+    }
+
+    return $email;
 }
 
 function validate_name($name)
@@ -84,8 +107,8 @@ function validate_name($name)
     }
 
     // regex in php to match the pattern in HTML5
-    $pattern = "[a-zA-Z ]+";
-    if (!preg_match($pattern, $name)) {
+    $pattern = "/[a-zA-Z ]+/";
+    if (preg_match($pattern, $name) == 0) {
         echo "<script>alert('match the required pattern in name');</script>";
         back("register");
         exit();
@@ -103,6 +126,7 @@ function validate_comment($comment)
         exit();
     }
     return filter_var($comment, FILTER_SANITIZE_SPECIAL_CHARS);
+
 }
 
 function insert_comment($comment, $date)

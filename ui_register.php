@@ -63,13 +63,13 @@
 
         <div class="mb-3 mt-3">
           <label for="email" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="email" placeholder="email@example.com" name="email" required>
+          <input class="form-control" type="email" id="email" placeholder="email@example.com" name="email" required>
         </div>
 
 
         <div class="mb-3">
           <label for="pwd" class="form-label">Password</label>
-          <input type="password" class="form-control" id="pwd" placeholder="Password" name="password" minlength="8"
+          <input type="password" class="form-control" id="pwd" placeholder="Password" name="password" minlength="1"
             required>
         </div>
 
@@ -77,7 +77,7 @@
         <div class="mb-3">
           <label for="cpwd" class="form-label">Confirm Password</label>
           <input type="password" class="form-control" id="cpwd" placeholder="Confirm Password" name="confirm_password"
-            minlength="8" required onkeyup="validate_password()">
+            minlength="1" required onkeyup="validate_password()">
         </div>
 
 

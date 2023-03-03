@@ -16,6 +16,7 @@ $confirm_password = $_POST["confirm_password"];
 
 // validate
 $validated_name = validate($name, "name");
+$validated_email = validate($email, "email");
 
 
 
