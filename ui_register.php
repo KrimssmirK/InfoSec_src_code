@@ -56,7 +56,8 @@
 
         <div class="mb-3 mt-3">
           <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" placeholder="Name" name="name" required>
+          <input type="text" class="form-control" id="name" placeholder="Name" name="name" pattern="[a-zA-Z ]+"
+            required>
         </div>
 
 
@@ -68,14 +69,15 @@
 
         <div class="mb-3">
           <label for="pwd" class="form-label">Password</label>
-          <input type="password" class="form-control" id="pwd" placeholder="Password" name="password" required>
+          <input type="password" class="form-control" id="pwd" placeholder="Password" name="password" minlength="8"
+            required>
         </div>
 
 
         <div class="mb-3">
           <label for="cpwd" class="form-label">Confirm Password</label>
           <input type="password" class="form-control" id="cpwd" placeholder="Confirm Password" name="confirm_password"
-            required onkeyup="validate_password()">
+            minlength="8" required onkeyup="validate_password()">
         </div>
 
 
