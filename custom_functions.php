@@ -18,6 +18,13 @@ function enter_page($page)
 
     }
 
+    if ($page == "admin_account") {
+        echo "<script>window.location.href='ui_manage_account.php';</script>";
+
+    }
+
+
+
 }
 
 function success($str)
@@ -527,7 +534,7 @@ function print_number($table)
 
 }
 
-function delete_comment($id)
+function delete($id, $type)
 {
     require 'config.php';
     try {
@@ -536,17 +543,35 @@ function delete_comment($id)
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // prepare
-        $stmt = $conn->prepare("DELETE FROM $tbl_comments WHERE ID = :EXIST_ID");
+        $stmt;
+        if ($type == "account") {
+            $stmt = $conn->prepare("DELETE FROM $tbl_accounts WHERE ID = :EXIST_ID");
+            // bind
+            $stmt->bindParam(":EXIST_ID", $EXIST_ID);
 
-        // bind
-        $stmt->bindParam(":EXIST_ID", $EXIST_ID);
+            //execute
+            $EXIST_ID = $id;
+            $stmt->execute();
 
-        //execute
-        $EXIST_ID = $id;
-        $stmt->execute();
+            success("delete an account");
+            enter_page("admin_account");
 
-        success("delete a comment");
-        enter_page("admin_comment");
+        }
+
+        if ($type == "comment") {
+            $stmt = $conn->prepare("DELETE FROM $tbl_comments WHERE ID = :EXIST_ID");
+            // bind
+            $stmt->bindParam(":EXIST_ID", $EXIST_ID);
+
+            //execute
+            $EXIST_ID = $id;
+            $stmt->execute();
+
+            success("delete a comment");
+            enter_page("admin_comment");
+        }
+
+
 
     } catch (PDOException $e) {
         echo $e->getMessage();
