@@ -60,18 +60,49 @@ function validate($target_input, $type)
     // $checked_comment = htmlentities($sanitized_comment);
     // return $checked_comment;
 
-    if ($type == "comment") {
-        if (strlen($target_input) == 0) {
-            echo "<script>alert('comment must be filled');</script>";
-            back("home");
-            exit();
-        }
-        return filter_var($target_input, FILTER_SANITIZE_SPECIAL_CHARS);
+    switch ($type) {
+        case "comment":
+            return validate_comment($target_input);
+
+        case "name":
+            return validate_name($target_input);
+
+        default:
+            echo "error or nothing is implemented";
     }
 
 
+}
 
+function validate_name($name)
+{
+    // check if it is not empty
+    if (strlen($name) == 0) {
+        echo "<script>alert('name must be filled');</script>";
+        back("register");
+        exit();
+    }
 
+    // regex in php to match the pattern in HTML5
+    $pattern = "[a-zA-Z ]+";
+    if (!preg_match($pattern, $name)) {
+        echo "<script>alert('match the required pattern in name');</script>";
+        back("register");
+        exit();
+    }
+
+    return $name;
+}
+
+function validate_comment($comment)
+{
+    // check if it is not empty
+    if (strlen($comment) == 0) {
+        echo "<script>alert('comment must be filled');</script>";
+        back("home");
+        exit();
+    }
+    return filter_var($comment, FILTER_SANITIZE_SPECIAL_CHARS);
 }
 
 function insert_comment($comment, $date)
