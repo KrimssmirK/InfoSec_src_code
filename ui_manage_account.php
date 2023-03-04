@@ -1,7 +1,6 @@
 <?php
 require "custom_functions.php";
 
-require("custom_session.php");
 
 start_session();
 ?>
