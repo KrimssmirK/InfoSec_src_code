@@ -6,6 +6,6 @@ $id = $_POST['id'];
 
 
 // delete the comment in database
-delete($id, "comment");
+delete_account_or_comment($id, "comment");
 
 ?>

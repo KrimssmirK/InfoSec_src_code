@@ -329,7 +329,7 @@ function print_account_with_control($id, $name, $created_date, $modified_date)
     <td>' . $created_date_diff_format . '</td>
     <td>' . $modified_date_diff_format . '</td>
     <td>
-      <form method="POST" action="edit.php">
+      <form method="POST" action="ui_edit.php">
         <input type="hidden" name="id" value="' . $id . '" />
         <button type="submit" class="btn btn-primary">Edit</button>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal-' . $id . '">Delete</button>
@@ -583,13 +583,14 @@ function login($email, $password)
 
 
     require 'config.php';
+    require("custom_session.php");
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         // set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // prepare
-        $stmt = $conn->prepare("SELECT Email, Password FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
+        $stmt = $conn->prepare("SELECT Name, Email, Password FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
 
         // bind
         $stmt->bindParam(':EXIST_EMAIL', $EXIST_EMAIL);
@@ -609,6 +610,7 @@ function login($email, $password)
 
         // 1.
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $retrieved_name = $result['Name'];
         $retrieved_email = $result['Email'];
         $retrieved_password = $result['Password'];
 
@@ -618,6 +620,7 @@ function login($email, $password)
 
         if (password_verify($password, $retrieved_password)) {
             success("login");
+            create_session($retrieved_name);
             enter_page("admin");
         } else {
             // save email and number of error in db
@@ -672,7 +675,7 @@ function print_number($table)
 
 }
 
-function delete($id, $type)
+function delete_account_or_comment($id, $type)
 {
     require 'config.php';
     try {

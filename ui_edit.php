@@ -1,3 +1,9 @@
+<?php
+require "custom_functions.php";
+require("custom_session.php");
+
+start_session();
+?>
 <!doctype html>
 <html lang="en">
 
@@ -19,7 +25,7 @@
       <a class="navbar-brand" href="#">
         <img src="images/infosec.png" alt="Logo" width="120" height="24" />
       </a>
-      <a class="btn btn-outline-success" href="index.php">Logout</a>
+      <a class="btn btn-outline-success" href="logout.php">Logout</a>
     </div>
   </header>
 
@@ -66,7 +72,7 @@
         </div>
         <?php
 
-        require "custom_functions.php";
+
 
         // get the inputs's data
         $id = $_POST['id'];
