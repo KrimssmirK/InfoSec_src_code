@@ -660,7 +660,7 @@ function retrieve_logged_in_name($id)
 
 }
 
-function print_number($table)
+function retrieve_number($table, $account_id)
 {
     require 'config.php';
     try {
@@ -672,23 +672,29 @@ function print_number($table)
         $stmt;
         if ($table == "accounts") {
             $stmt = $conn->prepare("SELECT * FROM $tbl_accounts");
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return sizeof($result);
         }
 
         if ($table == "comments") {
+            if ($account_id) {
+                $stmt = $conn->prepare("SELECT * FROM $tbl_comments WHERE PostedBy = :PostedBy");
+                $stmt->bindParam(":PostedBy", $PostedBy);
+                $PostedBy = $account_id;
+                $stmt->execute();
+                $result = $stmt->fetchAll();
+                return sizeof($result);
+            }
             $stmt = $conn->prepare("SELECT * FROM $tbl_comments");
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return sizeof($result);
 
         }
 
-        $stmt->execute();
 
-        // while ($row = $stmt->fetch()) {
-        //     if ($row[1] == $password) {
-        //         success("login");
-        //         enter_page("admin");
-        //     }
-        // }
-        $result = $stmt->fetchAll();
-        echo '<span class="fs-2 fw-bold">' . sizeof($result) . '</span>';
+
 
     } catch (PDOException $e) {
         echo $e->getMessage();

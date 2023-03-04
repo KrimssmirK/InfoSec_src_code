@@ -84,36 +84,77 @@ start_session();
         </div>
 
 
-        <div class="card mb-4">
-          <div class="card-body bg-warning">
-            <div class="d-flex justify-content-between">
-              <div>
-                <?php print_number("accounts"); ?>
+        <?php
 
-                <p class="card-text">User Registrations</p>
-              </div>
-              <span data-feather="user-plus" class="align-text-bottom w-auto h-auto"></span>
-            </div>
-          </div>
-          <div class="card-footer text-center" style="background-color: #ba8c00">
-            More Info
-            <span data-feather="arrow-right-circle"></span>
-          </div>
-        </div>
+        $number_of_accounts = null;
+        $number_of_comments = null;
+        if (isset($_SESSION['role']) == "admin") {
+          $number_of_accounts = retrieve_number("accounts", null);
+          $number_of_comments = retrieve_number("comments", null);
+        }
 
-
-        <div class="card">
-          <div class="card-body bg-danger">
-            <div class="d-flex justify-content-start">
-              <span data-feather="message-circle" class="w-auto h-auto me-3"></span>
-              <div>
-                <p class="card-text text-light">Comments</p>
-                <?php print_number("comments"); ?>
+        if (isset($_SESSION['role']) == "user") {
+          $number_of_comments = retrieve_number("comments", $_SESSION['id']);
+        }
+        $admin_logged_in = <<<ADMIN_LOGGED_IN
+            <div class="card mb-4">
+            <div class="card-body bg-warning">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <span class="fs-2 fw-bold">$number_of_accounts</span>
+                  <p class="card-text">User Registrations</p>
+                </div>
+                <span data-feather="user-plus" class="align-text-bottom w-auto h-auto"></span>
               </div>
             </div>
-
+          
           </div>
-        </div>
+
+
+          <div class="card">
+            <div class="card-body bg-danger">
+              <div class="d-flex justify-content-start">
+                <span data-feather="message-circle" class="w-auto h-auto me-3"></span>
+                <div>
+                  <p class="card-text text-light">Comments</p>
+                  <span class="fs-2 fw-bold">$number_of_comments</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          ADMIN_LOGGED_IN;
+
+        $user_logged_in = <<<USER_LOGGED_IN
+            <div class="card">
+            <div class="card-body bg-danger">
+              <div class="d-flex justify-content-start">
+                <span data-feather="message-circle" class="w-auto h-auto me-3"></span>
+                <div>
+                  <p class="card-text text-light">Comments</p>
+                  <span class="fs-2 fw-bold">$number_of_comments</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          USER_LOGGED_IN;
+
+        if (isset($_SESSION['role'])) {
+          if ($_SESSION['role'] == "admin") {
+            echo $admin_logged_in;
+          }
+
+          if ($_SESSION['role'] == "user") {
+            echo $user_logged_in;
+          }
+
+        }
+
+
+        ?>
+
+
     </div>
 
 
