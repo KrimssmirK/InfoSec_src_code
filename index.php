@@ -156,7 +156,7 @@
 								<div class="mb-3">
 									<label for="password" class="form-label">Password</label>
 									<input type="password" class="form-control" id="pass" name="password"
-										autocomplete=new-password required>
+										autocomplete="new-password" required>
 									<!-- added not automatically set the password -->
 								</div>
 								<div class="d-grid gap-2">

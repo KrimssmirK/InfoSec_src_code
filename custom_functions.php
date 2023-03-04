@@ -103,14 +103,14 @@ function validate_password($password)
     // check if it is not empty
     if (strlen($password) == 0) {
         echo "<script>alert('password must be filled');</script>";
-        enter_page("register");
+        // enter_page("register");
         exit();
     }
 
     // check it has length of more than 8
     if (strlen($password) < 8) {
         echo "<script>alert('password must be at least 8 characters');</script>";
-        enter_page("register");
+        // enter_page("register");
         exit();
     }
 
@@ -122,7 +122,7 @@ function validate_email($email)
     // check if it is not empty
     if (strlen($email) == 0) {
         echo "<script>alert('email must be filled');</script>";
-        enter_page("register");
+        // enter_page("register");
         exit();
     }
 
@@ -130,7 +130,7 @@ function validate_email($email)
     $pattern = "/[^ -<>]@/";
     if (!preg_match($pattern, $email)) {
         echo "<script>alert('match the required pattern in email');</script>";
-        enter_page("register");
+        // enter_page("register");
         exit();
     }
 
@@ -142,7 +142,7 @@ function validate_name($name)
     // check if it is not empty
     if (strlen($name) == 0) {
         echo "<script>alert('name must be filled');</script>";
-        enter_page("register");
+        // enter_page("register");
         exit();
     }
 
@@ -150,7 +150,7 @@ function validate_name($name)
     $pattern = "/[a-zA-Z ]+/";
     if (preg_match($pattern, $name) == 0) {
         echo "<script>alert('match the required pattern in name');</script>";
-        enter_page("register");
+        // enter_page("register");
         exit();
     }
 
@@ -162,7 +162,7 @@ function validate_comment($comment)
     // check if it is not empty
     if (strlen($comment) == 0) {
         echo "<script>alert('comment must be filled');</script>";
-        enter_page("home");
+        // enter_page("home");
         exit();
     }
     return filter_var($comment, FILTER_SANITIZE_SPECIAL_CHARS);
@@ -550,6 +550,8 @@ function update_account($id, $name, $password)
 
 function login($email, $password)
 {
+
+
     require 'config.php';
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -570,6 +572,13 @@ function login($email, $password)
             if ($row[1] == $password) {
                 success("login");
                 enter_page("admin");
+            } else {
+                /**
+                 * lock out account after having multiple errors
+                 * 
+                 * error message
+                 */
+                return false;
             }
         }
 
