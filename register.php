@@ -27,7 +27,7 @@ $validated_password = validate($password, "password");
 
 
 // insert the new account to database
-insert_account($validated_name, $validated_email, $validated_password);
+register_account($validated_name, $validated_email, $validated_password);
 
 
 

@@ -66,19 +66,6 @@
         </div>
         <?php
 
-        // include_once 'config.php';
-        
-        // $id = $_POST['id'];
-        
-        // $sql = "SELECT Name, Email, Password FROM $tbl_accounts where ID = '$id'";
-        // $result = mysqli_query($conn, $sql);
-        // $row = mysqli_fetch_assoc($result);
-        
-        // $name = $row['Name'];
-        // $email = $row['Email'];
-        // $password = $row['Password'];
-        
-        // mysqli_close($conn);
         require "custom_functions.php";
 
         // get the inputs's data
@@ -88,7 +75,7 @@
         $data = retrieve_account($id);
         $name = $data[0];
         $email = $data[1];
-        $password = $data[2];
+
 
         ?>
         <form action="save.php" method="post">
@@ -102,9 +89,8 @@
             <input type="email" class="form-control" id="email" value="<?php echo validate($email, "email"); ?>"
               name="email" disabled>
             <div class="mb-3">
-              <label for="pwd" class="form-label">Password</label>
-              <input type="password" class="form-control" id="pwd"
-                value="<?php echo validate($password, "password"); ?>" name="password" minlength="8" required>
+              <label for="pwd" class="form-label">New Password</label>
+              <input type="password" class="form-control" id="pwd" name="password" minlength="8">
             </div>
             <input type="hidden" name="id" value="<?php echo $id; ?>" />
             <hr>

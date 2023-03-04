@@ -442,7 +442,7 @@ function retrieve_accounts()
 }
 
 
-function insert_account($name, $email, $password)
+function register_account($name, $email, $password)
 {
     /**
      * using this PDO statement
@@ -463,42 +463,51 @@ function insert_account($name, $email, $password)
 
         $stmt_check_account->execute();
 
-        // fetch rows one by one
-        if ($row = $stmt_check_account->fetch()) {
-            if ($row[0] == $email) {
-                echo "<script>alert('email is already exist!');</script>";
-                echo "<script>window.location.href='ui_register.php';</script>";
-                exit();
-            }
+        $result = $stmt_check_account->fetch(PDO::FETCH_ASSOC);
 
+        $retrieved_email = $result['Email'];
+
+
+        // if the email does not exist create an account
+        if (!isset($retrieved_email)) {
+            // prepare
+            $stmt = $conn->prepare("INSERT INTO $tbl_accounts (Name, Email, Password, CreatedDate, ModifiedDate)
+            VALUES (:Name, :Email, :Password, :CreatedDate, :ModifiedDate)");
+
+            // bind
+            $stmt->bindParam(':Name', $Name);
+            $stmt->bindParam(':Email', $Email);
+            $stmt->bindParam(':Password', $Password);
+            $stmt->bindParam(':CreatedDate', $CreatedDate);
+            $stmt->bindParam(':ModifiedDate', $ModifiedDate);
+
+
+            // insert a row
+            $Name = $name;
+            $Email = $email;
+
+            // password encryption using bcrypt
+            // password_hash(target_variable, PASSWORD_DEFAULT)
+            $Password = password_hash($password, PASSWORD_DEFAULT);
+
+            // the date when the account is created
+            $created_date = date('Y-m-j');
+
+            $CreatedDate = $created_date;
+            $ModifiedDate = $created_date;
+            $stmt->execute();
+
+            success("register");
+            enter_page("home");
+        } else {
+            echo "<script>alert('email is already exist!');</script>";
+            echo "<script>window.location.href='ui_register.php';</script>";
+            exit();
         }
 
-        // prepare
-        $stmt = $conn->prepare("INSERT INTO $tbl_accounts (Name, Email, Password, CreatedDate, ModifiedDate)
-        VALUES (:Name, :Email, :Password, :CreatedDate, :ModifiedDate)");
-
-        // bind
-        $stmt->bindParam(':Name', $Name);
-        $stmt->bindParam(':Email', $Email);
-        $stmt->bindParam(':Password', $Password);
-        $stmt->bindParam(':CreatedDate', $CreatedDate);
-        $stmt->bindParam(':ModifiedDate', $ModifiedDate);
 
 
-        // insert a row
-        $Name = $name;
-        $Email = $email;
-        $Password = $password;
 
-        // the date when the account is created
-        $created_date = date('Y-m-j');
-
-        $CreatedDate = $created_date;
-        $ModifiedDate = $created_date;
-        $stmt->execute();
-
-        success("register");
-        enter_page("home");
 
     } catch (PDOException $e) {
         echo $e->getMessage();
@@ -520,25 +529,46 @@ function update_account($id, $name, $password)
         // set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // prepare
-        $stmt = $conn->prepare("UPDATE $tbl_accounts SET Name = :Name, Password = :Password, ModifiedDate = :ModifiedDate WHERE ID = :EXIST_ID");
+        if (isset($password)) {
+            // prepare
+            $stmt_with_password = $conn->prepare("UPDATE $tbl_accounts SET Name = :Name, Password = :Password, ModifiedDate = :ModifiedDate WHERE ID = :EXIST_ID");
 
-        // bind
-        $stmt->bindParam(':Name', $Name);
-        $stmt->bindParam(':Password', $Password);
-        $stmt->bindParam(':ModifiedDate', $ModifiedDate);
-        $stmt->bindParam(':EXIST_ID', $EXIST_ID);
+            // bind
+            $stmt_with_password->bindParam(':Name', $Name);
+            $stmt_with_password->bindParam(':Password', $Password);
+            $stmt_with_password->bindParam(':ModifiedDate', $ModifiedDate);
+            $stmt_with_password->bindParam(':EXIST_ID', $EXIST_ID);
 
-        // execute
-        $Name = $name;
-        $Password = $password;
-        $ModifiedDate = date('Y-m-j');
-        $EXIST_ID = $id;
-        $stmt->execute();
+            // execute
+            $Name = $name;
+            $Password = password_hash($password, PASSWORD_DEFAULT);
+            $ModifiedDate = date('Y-m-j');
+            $EXIST_ID = $id;
+            $stmt_with_password->execute();
 
 
-        success("update an account");
-        enter_page("admin_account");
+            success("update an account");
+            enter_page("admin_account");
+
+        } else {
+            // prepare
+            $stmt_without_password = $conn->prepare("UPDATE $tbl_accounts SET Name = :Name, ModifiedDate = :ModifiedDate WHERE ID = :EXIST_ID");
+
+            // bind
+            $stmt_without_password->bindParam(':Name', $Name);
+            $stmt_without_password->bindParam(':ModifiedDate', $ModifiedDate);
+            $stmt_without_password->bindParam(':EXIST_ID', $EXIST_ID);
+
+            // execute
+            $Name = $name;
+            $ModifiedDate = date('Y-m-j');
+            $EXIST_ID = $id;
+            $stmt_without_password->execute();
+
+
+            success("update an account");
+            enter_page("admin_account");
+        }
 
     } catch (PDOException $e) {
         echo $e->getMessage();
@@ -568,18 +598,33 @@ function login($email, $password)
         $EXIST_EMAIL = $email;
         $stmt->execute();
 
-        while ($row = $stmt->fetch()) {
-            if ($row[1] == $password) {
-                success("login");
-                enter_page("admin");
-            } else {
-                /**
-                 * lock out account after having multiple errors
-                 * 
-                 * error message
-                 */
-                return false;
-            }
+        /**
+         * flow for authentication in login
+         * 1. get existing email  ..ok
+         * 2. if none return response  ..ok
+         * 3. if there is compare the password  ..ok
+         * 4. if fails more than 3 save the account name with current time
+         * 5. to login again, if the saved time in database is less than 10 min in current time
+         */
+
+        // 1.
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $retrieved_email = $result['Email'];
+        $retrieved_password = $result['Password'];
+
+        if (!isset($retrieved_email)) {
+            return false;
+        }
+
+        if (password_verify($password, $retrieved_password)) {
+            success("login");
+            enter_page("admin");
+        } else {
+            // save email and number of error in db
+            // if the number of error is more than 3
+            // save email and current time
+            // set the number of error 3 to 0
+            // return false (saying account is locked for 10min)
         }
 
     } catch (PDOException $e) {

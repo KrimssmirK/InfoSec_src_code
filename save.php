@@ -6,10 +6,23 @@ $id = $_POST['id'];
 $name = $_POST['name'];
 $password = $_POST['password'];
 
-// validate
-$validated_name = validate($name, "name");
-$validated_password = validate($password, "password");
+$validated_name;
+$validated_password;
+if (isset($password)) {
+    $validated_name = validate($name, "name");
+    $validated_password = validate($password, "password");
 
-// update an account in database
-update_account($id, $validated_name, $validated_password);
+    // update an account in database
+    update_account($id, $validated_name, $validated_password);
+} else {
+    $validated_name = validate($name, "name");
+    // update an account in database
+    update_account($id, $validated_name, null);
+}
+
+// validate
+
+
+
+
 ?>
