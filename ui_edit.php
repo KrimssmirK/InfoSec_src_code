@@ -84,25 +84,62 @@ start_session();
 
         ?>
         <form action="save.php" method="post">
+
           <div class="mb-3 mt-3">
             <label for="name" class="form-label">Name</label>
             <input type="text" class="form-control" id="name" value="<?php echo validate($name, "name"); ?>" name="name"
               pattern="[a-zA-Z ]+" required>
           </div>
+
           <div class="mb-3 mt-3">
             <label for="email" class="form-label">Email address</label>
             <input type="email" class="form-control" id="email" value="<?php echo validate($email, "email"); ?>"
               name="email" disabled>
-            <div class="mb-3">
-              <label for="pwd" class="form-label">New Password</label>
-              <input type="password" class="form-control" id="pwd" name="password" minlength="8">
-            </div>
-            <input type="hidden" name="id" value="<?php echo $id; ?>" />
-            <hr>
-            <div class="d-flex justify-content-end">
-              <a href="./ui_manage_account.php" type="submit" class="btn btn-secondary px-3 me-2">Cancel</a>
-              <button type="submit" class="btn btn-primary px-3" id="create">Save</button>
-            </div>
+          </div>
+
+          <?php
+          $admin_selected = <<<ADMIN_SELECTED
+            <option value="admin" selected>admin</option>
+            <option value="user">user</option>
+            ADMIN_SELECTED;
+
+          $user_selected = <<<USER_SELECTED
+          <option value="admin">admin</option>
+          <option value="user" selected>user</option>
+          USER_SELECTED;
+          ?>
+
+          <div class="mb-3 mt-3">
+            <label for="roles" class="form-label">Role</label>
+            <select class="form-control" id="roles">
+              <?php
+              if ($_SESSION['role'] == 'admin') {
+                echo $admin_selected;
+              }
+
+              if ($_SESSION['role'] == 'user') {
+                echo $user_selected;
+              }
+              ?>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="pwd" class="form-label">New Password</label>
+            <input type="password" class="form-control" id="pwd" name="password" minlength="8">
+          </div>
+
+          <div class="mb-3">
+            <label for="pwd" class="form-label">Confirm New Password</label>
+            <input type="password" class="form-control" id="pwd" name="confirm_password" minlength="8">
+          </div>
+
+          <input type="hidden" name="id" value="<?php echo $id; ?>" />
+          <hr>
+          <div class="d-flex justify-content-end">
+            <a href="./ui_manage_account.php" type="submit" class="btn btn-secondary px-3 me-2">Cancel</a>
+            <button type="submit" class="btn btn-primary px-3" id="create">Save</button>
+          </div>
         </form>
 
 
