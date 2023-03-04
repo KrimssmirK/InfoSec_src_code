@@ -29,7 +29,7 @@ start_session();
       </a>
       <?php
 
-      $name = $_SESSION['name'];
+      $name = retrieve_logged_in_name($_SESSION['id']);
 
       $hello_doc = <<<HELLO_DOC
         <span style="color: white;font-size: large;">$name</span>

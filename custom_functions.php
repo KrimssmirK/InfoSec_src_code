@@ -535,11 +535,7 @@ function update_account($id, $name, $password, $role)
             $EXIST_ID = $id;
             $stmt_with_password->execute();
 
-            session_start();
-            unset($_SESSION['name']);
-            unset($_SESSION['role']);
-            $_SESSION['name'] = $name;
-            $_SESSION['role'] = $role;
+
 
 
             success("update an account");
@@ -562,11 +558,7 @@ function update_account($id, $name, $password, $role)
             $EXIST_ID = $id;
             $stmt_without_password->execute();
 
-            session_start();
-            unset($_SESSION['name']);
-            unset($_SESSION['role']);
-            $_SESSION['name'] = $name;
-            $_SESSION['role'] = $role;
+
 
             success("update an account");
             enter_page("admin_account");
@@ -589,7 +581,7 @@ function login($email, $password)
 
 
         // prepare
-        $stmt = $conn->prepare("SELECT Name, Email, Password, Role FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
+        $stmt = $conn->prepare("SELECT ID, Name, Email, Password, Role FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
 
         // bind
         $stmt->bindParam(':EXIST_EMAIL', $EXIST_EMAIL);
@@ -609,6 +601,7 @@ function login($email, $password)
 
         // 1.
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $retrieved_id = $result['ID'];
         $retrieved_name = $result['Name'];
         $retrieved_email = $result['Email'];
         $retrieved_password = $result['Password'];
@@ -619,8 +612,9 @@ function login($email, $password)
         }
 
         if (password_verify($password, $retrieved_password)) {
+
+            create_session($retrieved_id, $retrieved_name, $retrieved_role);
             success("login");
-            create_session($retrieved_name, $retrieved_role);
             enter_page("admin");
         } else {
             // save email and number of error in db
@@ -635,6 +629,32 @@ function login($email, $password)
     }
 
     $conn = null;
+}
+
+function retrieve_logged_in_name($id)
+{
+    require("config.php");
+    try {
+        // prepare
+        $stmt = $conn->prepare("SELECT Name FROM $tbl_accounts WHERE ID = :EXIST_ID");
+
+        // bind
+        $stmt->bindParam(':EXIST_ID', $EXIST_ID);
+
+        // execute
+        $EXIST_ID = $id;
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result['Name'];
+
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+
+    $conn = null;
+
 }
 
 function print_number($table)
@@ -724,15 +744,24 @@ function start_session()
     // this starts the session so that can retrieve the value in GLOBAL session
     session_start();
 
-    if (!isset($_SESSION['name'])) {
+    if (!isset($_SESSION['id'])) {
         echo "<script>alert('you cannot enter this page');</script>";
         enter_page("home");
     }
+
+
+
 }
 
-function create_session($name, $role)
+function create_session($id, $name, $role)
 {
+    if (!isset($role)) {
+        echo "<script>alert('wait for the admin to give you a permission to access');</script>";
+        enter_page("home");
+        exit();
+    }
     session_start();
+    $_SESSION['id'] = $id;
     $_SESSION['name'] = $name;
     $_SESSION['role'] = $role;
 }
