@@ -1,5 +1,5 @@
 <?php
-require("custom_session.php");
+require("custom_functions.php");
 
 stop_session();
 ?>
