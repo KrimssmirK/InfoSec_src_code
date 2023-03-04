@@ -23,6 +23,13 @@ function enter_page($page)
 
     }
 
+    if ($page == "admin_edit") {
+        echo "<script>window.location.href='ui_edit.php';</script>";
+
+    }
+
+
+
 
 
 
@@ -589,7 +596,7 @@ function login($email, $password)
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // prepare
-        $stmt = $conn->prepare("SELECT Name, Email, Password FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
+        $stmt = $conn->prepare("SELECT Name, Email, Password, Role FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
 
         // bind
         $stmt->bindParam(':EXIST_EMAIL', $EXIST_EMAIL);
@@ -612,6 +619,7 @@ function login($email, $password)
         $retrieved_name = $result['Name'];
         $retrieved_email = $result['Email'];
         $retrieved_password = $result['Password'];
+        $retrieved_role = $result['Role'];
 
         if (!isset($retrieved_email)) {
             return false;
@@ -619,7 +627,7 @@ function login($email, $password)
 
         if (password_verify($password, $retrieved_password)) {
             success("login");
-            create_session($retrieved_name);
+            create_session($retrieved_name, $retrieved_role);
             enter_page("admin");
         } else {
             // save email and number of error in db
@@ -732,10 +740,11 @@ function start_session()
     }
 }
 
-function create_session($name)
+function create_session($name, $role)
 {
     session_start();
     $_SESSION['name'] = $name;
+    $_SESSION['role'] = $role;
 }
 
 
@@ -744,7 +753,6 @@ function stop_session()
     session_start();
     session_unset();
     session_destroy();
-    require("custom_functions.php");
     enter_page("home");
 }
 ?>
