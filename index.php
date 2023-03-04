@@ -1,4 +1,8 @@
-<?php include_once 'custom_functions.php'; ?>
+<?php
+include_once 'custom_functions.php';
+
+session_start();
+?>
 <!DOCTYPE html> <!-- HTML5 -->
 <html lang="en">
 
@@ -142,30 +146,55 @@
 
 
 					<div class="col-md-4">
+						<?php
+						$not_logged_in = <<<NOT_LOGGED_IN
+									<div class="row">
+									<form action="signin.php" method="post" class="form-control" id="frmLogin"
+										enctype="multipart/form-data" autocomplete="off">
+										<input type="hidden" class="form-control" id="form_name" name="form_name"
+											value="frmLogin">
+										<h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+										<div class="mb-3">
+											<label for="email" class="form-label">Email</label>
+											<input type="email" class="form-control" id="email" name="email" required>
+										</div>
+										<div class="mb-3">
+											<label for="password" class="form-label">Password</label>
+											<input type="password" class="form-control" id="pass" name="password"
+												autocomplete="new-password" required>
+											<!-- added not automatically set the password -->
+										</div>
+										<div class="d-grid gap-2">
+											<button class="btn btn-lg btn-primary" type="submit">Sign in</button>
+											<a type='button' class='btn btn-lg btn-info' href='ui_register.php'>Register
+												Here</a>
+										</div>
+									</form>
+								</div>
+								NOT_LOGGED_IN;
+						$logged_in_name = null;
+						if (isset($_SESSION['name'])) {
+							$logged_in_name = $_SESSION['name'];
+						}
+						$logged_in = <<<LOGGED_IN
+								<div class="row">
+									<h2 class="text-center">$logged_in_name</h2>
+									<div class="d-grid gap-2">
+										<a type="button" class="btn btn-lg btn-primary" href='ui_admin_dashboard.php'>Dashboard</a>
+										<a type="button" class='btn btn-lg btn-info' href='logout.php'>Log out</a>
+									</div>
+								</form>
+							</div>
+						LOGGED_IN;
 
-						<div class="row">
-							<form action="signin.php" method="post" class="form-control" id="frmLogin"
-								enctype="multipart/form-data" autocomplete="off">
-								<input type="hidden" class="form-control" id="form_name" name="form_name"
-									value="frmLogin">
-								<h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-								<div class="mb-3">
-									<label for="email" class="form-label">Email</label>
-									<input type="email" class="form-control" id="email" name="email" required>
-								</div>
-								<div class="mb-3">
-									<label for="password" class="form-label">Password</label>
-									<input type="password" class="form-control" id="pass" name="password"
-										autocomplete="new-password" required>
-									<!-- added not automatically set the password -->
-								</div>
-								<div class="d-grid gap-2">
-									<button class="btn btn-lg btn-primary" type="submit">Sign in</button>
-									<a type='button' class='btn btn-lg btn-info' href='ui_register.php'>Register
-										Here</a>
-								</div>
-							</form>
-						</div>
+						if (isset($_SESSION['id'])) {
+							echo $logged_in;
+						} else {
+							$logged_in = false;
+							echo $not_logged_in;
+						}
+						?>
+
 
 
 						<div class="row" style="margin-top: 5px;">
@@ -173,10 +202,23 @@
 								enctype="multipart/form-data" autocomplete="off">
 								<h1 class="h3 mb-3 fw-normal">Post Comments</h1>
 								<div class="mb-3">
-									<textarea id="comment" name="comment" style="width:100%; height: 228px;"
-										required></textarea>
+									<textarea id="comment" name="comment" style="width:100%; height: 228px;" required
+										<?php
+										if (!isset($_SESSION['id'])) {
+											echo 'disabled';
+										}
+										?>></textarea>
 								</div>
-								<button class="btn btn-lg btn-primary" type="submit">Submit Post</button>
+								<button class="btn btn-lg btn-primary" type="submit" <?php
+								if (!isset($_SESSION['id'])) {
+									echo 'disabled';
+								}
+								?>>Submit Post</button>
+								<?php
+								if (!isset($_SESSION['id'])) {
+									echo 'log in to comment';
+								}
+								?>
 							</form>
 						</div>
 					</div>
@@ -194,6 +236,7 @@
 							<thead>
 								<tr>
 									<th scope="col">Message</th>
+									<th scope="col">Posted By</th>
 									<th scope="col">Post Date</th>
 								</tr>
 							</thead>

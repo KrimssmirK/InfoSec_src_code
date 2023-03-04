@@ -13,5 +13,6 @@ $created_date = date('Y-m-j');
 
 
 // insert the data to database
-insert_comment($validated_comment, $created_date);
+session_start();
+insert_comment($validated_comment, $_SESSION['id'], $created_date);
 ?>

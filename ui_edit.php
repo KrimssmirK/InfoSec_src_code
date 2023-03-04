@@ -21,7 +21,7 @@ start_session();
 <body>
   <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="index.php">
         <img src="images/infosec.png" alt="Logo" width="120" height="24" />
       </a>
       <?php

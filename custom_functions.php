@@ -176,7 +176,7 @@ function validate_comment($comment)
 
 }
 
-function insert_comment($comment, $date)
+function insert_comment($comment, $account_id, $date)
 {
     /**
      * using this PDO statement
@@ -187,16 +187,18 @@ function insert_comment($comment, $date)
     try {
 
         // prepare
-        $stmt = $conn->prepare("INSERT INTO $tbl_comments (Message, PostDate)
-        VALUES (:Message, :PostDate)");
+        $stmt = $conn->prepare("INSERT INTO $tbl_comments (Message, PostedBy, PostDate)
+        VALUES (:Message, :PostedBy, :PostDate)");
 
         // bind
         $stmt->bindParam(':Message', $Message);
+        $stmt->bindParam(':PostedBy', $PostedBy);
         $stmt->bindParam(':PostDate', $PostDate);
 
 
         // insert a row
         $Message = $comment;
+        $PostedBy = $account_id;
         $PostDate = $date;
         $stmt->execute();
 
@@ -210,7 +212,7 @@ function insert_comment($comment, $date)
     $conn = null;
 }
 
-function print_comment_with_control($id, $comment, $created_date)
+function print_comment_with_control($id, $comment, $posted_by, $created_date)
 {
     $created_date_diff_format = date("d M Y", strtotime($created_date));
     echo '<tr>
@@ -251,11 +253,11 @@ function print_comment_with_control($id, $comment, $created_date)
 
 }
 
-function print_comment($id, $comment, $date, $is_admin)
+function print_comment($id, $comment, $posted_by, $date, $is_admin)
 {
     if ($is_admin) {
         // do something in admin side
-        print_comment_with_control($id, $comment, $date);
+        print_comment_with_control($id, $comment, $posted_by, $date);
     } else {
         /**
          * 1. change the date format 
@@ -270,6 +272,7 @@ function print_comment($id, $comment, $date, $is_admin)
         // 2.
         echo '<tr>
                 <td>' . $comment . '</td>
+                <td>' . $posted_by . '</td>
                 <td>' . $date_diff_format . '</td>
                 </tr>';
     }
@@ -302,14 +305,14 @@ function retrieve_comments($is_admin = false)
     try {
 
         // prepare
-        $stmt = $conn->prepare("SELECT ID, Message, PostDate FROM $tbl_comments ORDER BY ID DESC");
+        $stmt = $conn->prepare("SELECT ID, Message, PostedBy, PostDate FROM $tbl_comments ORDER BY ID DESC");
 
         // execute
         $stmt->execute();
 
         // fetch rows one by one
         while ($row = $stmt->fetch()) {
-            print_comment($row[0], add_breakline($row[1]), $row[2], $is_admin);
+            print_comment($row[0], add_breakline($row[1]), retrieve_logged_in_name($row[2]), $row[3], $is_admin);
         }
 
 
