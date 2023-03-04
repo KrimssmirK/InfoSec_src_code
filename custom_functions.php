@@ -185,9 +185,6 @@ function insert_comment($comment, $date)
 
     require 'config.php';
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        // set the PDO error mode to exception
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // prepare
         $stmt = $conn->prepare("INSERT INTO $tbl_comments (Message, PostDate)
@@ -303,9 +300,6 @@ function retrieve_comments($is_admin = false)
 
     require 'config.php';
     try {
-        // connect
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // prepare
         $stmt = $conn->prepare("SELECT ID, Message, PostDate FROM $tbl_comments ORDER BY ID DESC");
@@ -385,9 +379,6 @@ function retrieve_account($id)
 
     require 'config.php';
     try {
-        // connect
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // prepare
         $stmt = $conn->prepare("SELECT Name, Email, Password FROM $tbl_accounts WHERE ID = :EXIST_ID");
@@ -426,9 +417,6 @@ function retrieve_accounts()
 
     require 'config.php';
     try {
-        // connect
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // prepare
         $stmt = $conn->prepare("SELECT ID, Name, CreatedDate, ModifiedDate FROM $tbl_accounts");
@@ -458,11 +446,6 @@ function register_account($name, $email, $password)
 
     require 'config.php';
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        // set the PDO error mode to exception
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-
         $stmt_check_account = $conn->prepare("SELECT Email FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
 
         $stmt_check_account->bindParam(':EXIST_EMAIL', $EXIST_EMAIL);
@@ -523,7 +506,7 @@ function register_account($name, $email, $password)
     $conn = null;
 }
 
-function update_account($id, $name, $password)
+function update_account($id, $name, $password, $role)
 {
     /**
      * using this PDO statement
@@ -532,26 +515,31 @@ function update_account($id, $name, $password)
 
     require 'config.php';
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        // set the PDO error mode to exception
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        if (isset($password)) {
+        if (!empty($password)) {
             // prepare
-            $stmt_with_password = $conn->prepare("UPDATE $tbl_accounts SET Name = :Name, Password = :Password, ModifiedDate = :ModifiedDate WHERE ID = :EXIST_ID");
+            $stmt_with_password = $conn->prepare("UPDATE $tbl_accounts SET Name = :Name, Password = :Password, Role = :Role, ModifiedDate = :ModifiedDate WHERE ID = :EXIST_ID");
 
             // bind
             $stmt_with_password->bindParam(':Name', $Name);
             $stmt_with_password->bindParam(':Password', $Password);
+            $stmt_with_password->bindParam(':Role', $Role);
             $stmt_with_password->bindParam(':ModifiedDate', $ModifiedDate);
             $stmt_with_password->bindParam(':EXIST_ID', $EXIST_ID);
 
             // execute
             $Name = $name;
             $Password = password_hash($password, PASSWORD_DEFAULT);
+            $Role = $role;
             $ModifiedDate = date('Y-m-j');
             $EXIST_ID = $id;
             $stmt_with_password->execute();
+
+            session_start();
+            unset($_SESSION['name']);
+            unset($_SESSION['role']);
+            $_SESSION['name'] = $name;
+            $_SESSION['role'] = $role;
 
 
             success("update an account");
@@ -559,19 +547,26 @@ function update_account($id, $name, $password)
 
         } else {
             // prepare
-            $stmt_without_password = $conn->prepare("UPDATE $tbl_accounts SET Name = :Name, ModifiedDate = :ModifiedDate WHERE ID = :EXIST_ID");
+            $stmt_without_password = $conn->prepare("UPDATE $tbl_accounts SET Name = :Name, Role = :Role ModifiedDate = :ModifiedDate WHERE ID = :EXIST_ID");
 
             // bind
             $stmt_without_password->bindParam(':Name', $Name);
+            $stmt_without_password->bindParam(':Role', $Role);
             $stmt_without_password->bindParam(':ModifiedDate', $ModifiedDate);
             $stmt_without_password->bindParam(':EXIST_ID', $EXIST_ID);
 
             // execute
             $Name = $name;
+            $Role = $role;
             $ModifiedDate = date('Y-m-j');
             $EXIST_ID = $id;
             $stmt_without_password->execute();
 
+            session_start();
+            unset($_SESSION['name']);
+            unset($_SESSION['role']);
+            $_SESSION['name'] = $name;
+            $_SESSION['role'] = $role;
 
             success("update an account");
             enter_page("admin_account");
@@ -591,9 +586,7 @@ function login($email, $password)
 
     require 'config.php';
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        // set the PDO error mode to exception
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 
         // prepare
         $stmt = $conn->prepare("SELECT Name, Email, Password, Role FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
@@ -686,9 +679,6 @@ function delete_account_or_comment($id, $type)
 {
     require 'config.php';
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        // set the PDO error mode to exception
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // prepare
         $stmt;
