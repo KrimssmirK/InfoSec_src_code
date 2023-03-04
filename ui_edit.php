@@ -24,6 +24,17 @@ start_session();
       <a class="navbar-brand" href="#">
         <img src="images/infosec.png" alt="Logo" width="120" height="24" />
       </a>
+      <?php
+
+      $name = $_SESSION['name'];
+
+      $hello_doc = <<<HELLO_DOC
+        <span style="color: white;font-size: large;">$name</span>
+      HELLO_DOC;
+
+      echo $hello_doc;
+
+      ?>
       <a class="btn btn-outline-success" href="logout.php">Logout</a>
     </div>
   </header>
@@ -48,7 +59,7 @@ start_session();
           </h6>
           <ul class="nav flex-column mb-2">
             <li class="nav-item">
-              <a class="nav-link" href="ui_manage_account.php">
+              <a class="nav-link active" href="ui_manage_account.php">
                 <span data-feather="users" class="align-text-bottom"></span>
                 Accounts Management
               </a>
