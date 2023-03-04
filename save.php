@@ -4,12 +4,14 @@ require "custom_functions.php";
 // get the inputs' data
 $id = $_POST['id'];
 $name = $_POST['name'];
+$role = $_POST['role'];
 $password = $_POST['password'];
 $confirm_password = $_POST['confirm_password'];
 
+
 $validated_name;
 $validated_password;
-if (isset($password)) {
+if (!empty($password)) {
 
     if ($password != $confirm_password) {
         echo "<script>alert('match the password and confirm password');</script>";
@@ -19,11 +21,11 @@ if (isset($password)) {
     $validated_password = validate($password, "password");
 
     // update an account in database
-    update_account($id, $validated_name, $validated_password);
+    update_account($id, $validated_name, $validated_password, $role);
 } else {
     $validated_name = validate($name, "name");
     // update an account in database
-    update_account($id, $validated_name, null);
+    update_account($id, $validated_name, null, $role);
 }
 
 ?>

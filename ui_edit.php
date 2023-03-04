@@ -122,7 +122,7 @@ start_session();
 
           <div class="mb-3 mt-3">
             <label for="roles" class="form-label">Role</label>
-            <select class="form-control" id="roles">
+            <select class="form-control" id="roles" name="role">
               <?php
               if ($_SESSION['role'] == 'admin') {
                 echo $admin_selected;
