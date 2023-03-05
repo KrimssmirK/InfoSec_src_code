@@ -781,6 +781,6 @@ function stop_session()
     session_start();
     session_unset();
     session_destroy();
-    enter_page("home");
+
 }
 ?>
