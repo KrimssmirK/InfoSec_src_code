@@ -541,8 +541,8 @@ function update_account($id, $name, $password, $role)
 
 
 
-            success("update an account");
-            enter_page("admin_account");
+
+            return true;
 
         } else {
             // prepare
@@ -563,8 +563,8 @@ function update_account($id, $name, $password, $role)
 
 
 
-            success("update an account");
-            enter_page("admin_account");
+
+            return true;
         }
 
     } catch (PDOException $e) {
