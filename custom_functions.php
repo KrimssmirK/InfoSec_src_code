@@ -42,7 +42,6 @@ function success($str)
 }
 
 
-
 function validate($target_input, $type)
 {
 
@@ -291,7 +290,7 @@ function add_breakline($comment)
     return $comment;
 }
 
-function retrieve_comments($is_admin = false)
+function retrieve_comments($is_admin = false, $role = null)
 {
 
     /**----------------------
@@ -303,16 +302,30 @@ function retrieve_comments($is_admin = false)
 
     require 'config.php';
     try {
+        if ($role == "user") {
+            // session_start();
+            $account_id = $_SESSION['id'];
+            $stmt = $conn->prepare("SELECT ID, Message, PostDate FROM $tbl_comments WHERE PostedBy = :PostedBy ORDER BY ID DESC");
+            $stmt->bindParam(":PostedBy", $PostedBy);
+            $PostedBy = $account_id;
+            $stmt->execute();
+            // fetch rows one by one
+            while ($row = $stmt->fetch()) {
+                print_comment($row[0], add_breakline($row[1]), null, $row[2], $is_admin);
+            }
 
-        // prepare
-        $stmt = $conn->prepare("SELECT ID, Message, PostedBy, PostDate FROM $tbl_comments ORDER BY ID DESC");
+        } else {
+            // prepare
+            $stmt = $conn->prepare("SELECT ID, Message, PostedBy, PostDate FROM $tbl_comments ORDER BY ID DESC");
 
-        // execute
-        $stmt->execute();
+            // execute
+            $stmt->execute();
 
-        // fetch rows one by one
-        while ($row = $stmt->fetch()) {
-            print_comment($row[0], add_breakline($row[1]), retrieve_logged_in_name($row[2]), $row[3], $is_admin);
+            // fetch rows one by one
+            while ($row = $stmt->fetch()) {
+                print_comment($row[0], add_breakline($row[1]), retrieve_logged_in_name($row[2]), $row[3], $is_admin);
+            }
+
         }
 
 

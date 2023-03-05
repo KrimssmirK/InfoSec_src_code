@@ -120,7 +120,16 @@ start_session();
             </tr>
           </thead>
           <tbody>
-            <?php retrieve_comments($is_admin = true); ?>
+            <?php
+            if ($_SESSION['role'] == "admin") {
+              retrieve_comments($is_admin = true, $_SESSION['role']);
+            }
+
+            if ($_SESSION['role'] == "user") {
+              retrieve_comments($is_admin = true, $_SESSION['role']);
+            }
+
+            ?>
           </tbody>
         </table>
 
