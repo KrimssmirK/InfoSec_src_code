@@ -471,11 +471,9 @@ function register_account($name, $email, $password)
 
         $result = $stmt_check_account->fetch(PDO::FETCH_ASSOC);
 
-        $retrieved_email = $result['Email'];
-
 
         // if the email does not exist create an account
-        if (!isset($retrieved_email)) {
+        if (!isset($result['Email'])) {
             // prepare
             $stmt = $conn->prepare("INSERT INTO $tbl_accounts (Name, Email, Password, CreatedDate, ModifiedDate)
             VALUES (:Name, :Email, :Password, :CreatedDate, :ModifiedDate)");
