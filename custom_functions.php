@@ -205,7 +205,7 @@ function insert_comment($comment, $account_id, $date)
         enter_page("home");
 
     } catch (PDOException $e) {
-        echo $sql . "<br>" . $e->getMessage();
+        trigger_error("Error: " . $e);
     }
 
     $conn = null;
@@ -332,7 +332,7 @@ function retrieve_comments($is_admin = false, $role = null)
 
 
     } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        trigger_error("Error: " . $e);
     }
     $conn = null;
 }
@@ -416,7 +416,7 @@ function retrieve_account($id)
 
 
     } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        trigger_error("Error: " . $e);
     }
     $conn = null;
 
@@ -449,7 +449,7 @@ function retrieve_accounts()
 
 
     } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        trigger_error("Error: " . $e);
     }
     $conn = null;
 }
@@ -516,7 +516,7 @@ function register_account($name, $email, $password)
 
 
     } catch (PDOException $e) {
-        echo $e->getMessage();
+        trigger_error("Error: " . $e);
     }
 
     $conn = null;
@@ -581,7 +581,7 @@ function update_account($id, $name, $password, $role)
         }
 
     } catch (PDOException $e) {
-        echo $e->getMessage();
+        trigger_error("Error: " . $e);
     }
 
     $conn = null;
@@ -643,7 +643,7 @@ function login($email, $password)
         }
 
     } catch (PDOException $e) {
-        echo $e->getMessage();
+        trigger_error("Error: " . $e);
     }
 
     $conn = null;
@@ -669,7 +669,7 @@ function retrieve_logged_in_name($id)
         return decrypt($result['Name']);
 
     } catch (PDOException $e) {
-        echo $e->getMessage();
+        trigger_error("Error: " . $e);
     }
 
     $conn = null;
@@ -713,7 +713,7 @@ function retrieve_number($table, $account_id)
 
 
     } catch (PDOException $e) {
-        echo $e->getMessage();
+        trigger_error("Error: " . $e);
     }
 
     $conn = null;
@@ -757,7 +757,7 @@ function delete_account_or_comment($id, $type)
 
 
     } catch (PDOException $e) {
-        echo $e->getMessage();
+        trigger_error("Error: " . $e);
     }
 
     $conn = null;
@@ -821,4 +821,15 @@ function decrypt($encrypted_data)
     $decrypted_data = openssl_decrypt($encrypted_data, $algo, $key, 0, $iv);
     return $decrypted_data;
 }
+
+ini_set("display.errors", 0);
+ini_set("log_errors", 1);
+ini_set("error_log", dirname(__FILE__) . "/error_log.txt");
+
+function customError($errno, $errstr)
+{
+    error_log("Error: [$errno] $errstr", 0);
+}
+
+set_error_handler("customError");
 ?>
