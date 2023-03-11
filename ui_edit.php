@@ -129,7 +129,7 @@ start_session();
 
 
         ?>
-        <form action="save.php" method="post">
+        <form action="save.php" method="post" autocomplete="off">
 
           <div class="mb-3 mt-3">
             <label for="name" class="form-label">Name</label>
@@ -173,6 +173,13 @@ start_session();
               ?>
             </select>
           </div>
+          <!-- fixed for user role to be null -->
+          <?php
+          if ($_SESSION['role'] == 'user') {
+            echo "<input type='hidden' value='user' name='role' />";
+          }
+
+          ?>
 
           <div class="mb-3">
             <label for="pwd" class="form-label">New Password</label>
