@@ -196,7 +196,7 @@ function insert_comment($comment, $account_id, $date)
 
 
         // insert a row
-        $Message = $comment;
+        $Message = encrypt($comment);
         $PostedBy = $account_id;
         $PostDate = $date;
         $stmt->execute();
@@ -311,7 +311,9 @@ function retrieve_comments($is_admin = false, $role = null)
             $stmt->execute();
             // fetch rows one by one
             while ($row = $stmt->fetch()) {
-                print_comment($row[0], add_breakline($row[1]), null, $row[2], $is_admin);
+
+
+                print_comment($row[0], add_breakline(decrypt($row[1])), null, $row[2], $is_admin);
             }
 
         } else {
@@ -323,7 +325,7 @@ function retrieve_comments($is_admin = false, $role = null)
 
             // fetch rows one by one
             while ($row = $stmt->fetch()) {
-                print_comment($row[0], add_breakline($row[1]), retrieve_logged_in_name($row[2]), $row[3], $is_admin);
+                print_comment($row[0], add_breakline(decrypt($row[1])), retrieve_logged_in_name($row[2]), $row[3], $is_admin);
             }
 
         }
@@ -408,8 +410,8 @@ function retrieve_account($id)
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $name = $result['Name'];
-        $email = $result['Email'];
+        $retrieved_name = $result['Name'];
+        $retrieved_email = $result['Email'];
         $password = $result['Password'];
 
 
@@ -418,7 +420,7 @@ function retrieve_account($id)
     }
     $conn = null;
 
-    return array($name, $email, $password);
+    return array(decrypt($retrieved_name), decrypt($retrieved_email), $password);
 }
 
 function retrieve_accounts()
@@ -442,7 +444,7 @@ function retrieve_accounts()
 
         // fetch rows one by one
         while ($row = $stmt->fetch()) {
-            print_account_with_control($row[0], $row[1], $row[2], $row[3]);
+            print_account_with_control($row[0], decrypt($row[1]), $row[2], $row[3]);
         }
 
 
@@ -465,7 +467,7 @@ function register_account($name, $email, $password)
         $stmt_check_account = $conn->prepare("SELECT Email FROM $tbl_accounts WHERE Email = :EXIST_EMAIL");
 
         $stmt_check_account->bindParam(':EXIST_EMAIL', $EXIST_EMAIL);
-        $EXIST_EMAIL = $email;
+        $EXIST_EMAIL = encrypt($email);
 
         $stmt_check_account->execute();
 
@@ -487,8 +489,8 @@ function register_account($name, $email, $password)
 
 
             // insert a row
-            $Name = $name;
-            $Email = $email;
+            $Name = encrypt($name);
+            $Email = encrypt($email);
 
             // password encryption using bcrypt
             // password_hash(target_variable, PASSWORD_DEFAULT)
@@ -542,7 +544,7 @@ function update_account($id, $name, $password, $role)
             $stmt_with_password->bindParam(':EXIST_ID', $EXIST_ID);
 
             // execute
-            $Name = $name;
+            $Name = encrypt($name);
             $Password = password_hash($password, PASSWORD_DEFAULT);
             $Role = $role;
             $ModifiedDate = date('Y-m-j');
@@ -566,7 +568,7 @@ function update_account($id, $name, $password, $role)
             $stmt_without_password->bindParam(':EXIST_ID', $EXIST_ID);
 
             // execute
-            $Name = $name;
+            $Name = encrypt($name);
             $Role = $role;
             $ModifiedDate = date('Y-m-j');
             $EXIST_ID = $id;
@@ -601,7 +603,7 @@ function login($email, $password)
         $stmt->bindParam(':EXIST_EMAIL', $EXIST_EMAIL);
 
         // get the data
-        $EXIST_EMAIL = $email;
+        $EXIST_EMAIL = encrypt($email);
         $stmt->execute();
 
         /**
@@ -622,14 +624,16 @@ function login($email, $password)
         $retrieved_role = $result['Role'];
 
         if (!isset($retrieved_email)) {
+
             return false;
         }
 
         if (password_verify($password, $retrieved_password)) {
 
-            create_session($retrieved_id, $retrieved_name, $retrieved_role);
+            create_session($retrieved_id, decrypt($retrieved_name), $retrieved_role);
             success("login");
             enter_page("admin");
+
         } else {
             // save email and number of error in db
             // if the number of error is more than 3
@@ -643,6 +647,7 @@ function login($email, $password)
     }
 
     $conn = null;
+    return true;
 }
 
 function retrieve_logged_in_name($id)
@@ -661,7 +666,7 @@ function retrieve_logged_in_name($id)
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $result['Name'];
+        return decrypt($result['Name']);
 
     } catch (PDOException $e) {
         echo $e->getMessage();
@@ -793,5 +798,27 @@ function stop_session()
     session_unset();
     session_destroy();
 
+}
+
+function encrypt($plain_data)
+{
+    // preparation
+    $key = "kenjisugino";
+    $iv = "1234567890123456";
+    $algo = "AES-256-CBC";
+
+    $encrypted_data = openssl_encrypt($plain_data, $algo, $key, 0, $iv);
+    return $encrypted_data;
+}
+
+function decrypt($encrypted_data)
+{
+    // preparation
+    $key = "kenjisugino";
+    $iv = "1234567890123456";
+    $algo = "AES-256-CBC";
+
+    $decrypted_data = openssl_decrypt($encrypted_data, $algo, $key, 0, $iv);
+    return $decrypted_data;
 }
 ?>
